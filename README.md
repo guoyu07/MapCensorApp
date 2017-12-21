@@ -1,30 +1,33 @@
-# webpack-vue2.0-mintUI Project
+# MapCensorApp
 
-> A Vue.js project
+> 基于webpack-vue2.0-mintUI 项目
 
-## Build Setup
+## 打包安装
 
 ``` bash
-# install dependencies
+# 安装依赖
 npm install
-
-# serve with hot reload at localhost:8080
+ 
+# 启动服务 localhost:8080
 npm run dev
-
-# build for production with minification
+ 
+# 打包压缩项目
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
+ 
+# 单元测试
 npm run unit
-
-# run e2e tests
+ 
+# 自动化e2e测试
 npm run e2e
-
-# run all tests
+ 
+# 单元测试 + e2e (npm run unit + npm run e2e)
 npm test
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+![登录](https://raw.githubusercontent.com/wangmingdong/docImg/master/1.png)
+
+## 注意事项
+
+> 1、目前没加过滤器，登录认证有些问题，点击退出可能无法完全退出，需要重新刷新；
+>
+> 2、当前只支持权限为superManage的待审核；
