@@ -18,9 +18,5 @@ export default {
   [GET_LIST_MORE] (state, value) {
     state.list = state.list.concat(value.userList);
     state.timeLine = value.timeLine;
-  },
-  mutationName (state, value) {
-    console.log(state);
-    state.strLength = value;
   }
 };

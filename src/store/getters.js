@@ -13,9 +13,5 @@ export default {
       list = userList;
     }
     return list;
-  },
-  strLength: (state) => {
-    console.log(state);
-    return state;
   }
 };
