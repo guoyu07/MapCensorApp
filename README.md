@@ -7,15 +7,21 @@
 ``` bash
 # 安装依赖
 npm install
-
+ 
 # 启动服务 localhost:8080
 npm run dev
-
+ 
 # 打包压缩项目
 npm run build
-
+ 
 # 单元测试
 npm run unit
+ 
+# 自动化e2e测试
+npm run e2e
+ 
+# 单元测试 + e2e (npm run unit + npm run e2e)
+npm test
 ```
 
 ![登录](https://raw.githubusercontent.com/wangmingdong/docImg/master/1.png)
