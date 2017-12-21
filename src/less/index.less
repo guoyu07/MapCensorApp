@@ -1,0 +1,67 @@
+html {
+  height: 100%;
+  body {
+    height: 100%;
+    .app {
+      font-family: 'Avenir', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-align: center;
+      color: #2c3e50;
+      background-color: #fff;
+      margin-top: 40px;
+      -webkit-tap-highlight-color:transparent;//方法一
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);//方法二
+      tap-highlight-color: rgba(0, 0, 0, 0);//方法三
+      height: 100%;
+    }
+  }
+}
+
+h1, h2 {
+  font-weight: normal;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+a {
+  color: #42b983;
+}
+.login{
+  .mint-cell {
+      .mint-cell-wrapper {
+         background-image: none;
+         border-bottom: 1px solid #d9d9d9;
+      }
+  }
+ }
+.tab-container {
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: center;
+}
+.tab-title{
+  text-decoration: none;
+  font-size: 18px;
+  margin: 0 10px;
+  &.router-link-active{
+    border-bottom: 3px solid #26a2ff;
+    .mint-tab-item-label {
+      color: #26a2ff !important;
+    }
+  }
+  .tab-content {
+    .mint-tab-item-label {
+      font-size: 18px;
+      color: #000;
+    }
+  }
+}
