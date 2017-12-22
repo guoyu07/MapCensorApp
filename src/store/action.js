@@ -158,5 +158,71 @@ export default {
         position: 'bottom'
       });
     });
+  },
+  // 查询项目列表数据
+  getProjectList (context, obj) {
+    let self = this;
+    axios.get(Application.SERVICE_URL + '/bs/project/list', {
+      params: {
+        projectStatus: '[' + obj.status.toString() + ']',
+        pageSize: obj.pageSize,
+        pageNum: obj.pageNum,
+        token: Application.TOKEN
+      }
+    }).then(function (res) {
+      if (res.data.errorCode > -1) {
+        // 加载更多
+        if (obj.type) {
+          context.commit('GET_PROJECT_MORE', {
+            projectList: res.data.result.data,
+            timeLine: Date.parse(new Date())
+          });
+        } else {  // 刷新列表
+          context.commit('GET_PROJECT_LIST', {
+            projectList: res.data.result.data,
+            timeLine: Date.parse(new Date())
+          });
+        }
+        if (obj.callback()) {
+          obj.callback();
+        }
+      } else {
+        Toast({
+          message: res.data.message,
+          position: 'bottom'
+        });
+      }
+    }).catch(function (err) {
+      console.log(err);
+      Toast({
+        message: '查询失败!',
+        position: 'bottom'
+      });
+    });
+  },
+  // 审核项目
+  checkProject (context, obj) {
+    let self = this;
+    axios.post(Application.SERVICE_URL + '/bs/project/auditPro', {
+      projectId: obj.projectId,
+      projectStatus: obj.projectStatus,
+      token: Application.TOKEN
+    }).then(function (res) {
+      if (res.data.errorCode > -1) {
+        if (obj.callback()) {
+          obj.callback();
+        }
+      }
+      Toast({
+        message: res.data.message,
+        position: 'bottom'
+      });
+    }).catch(function (err) {
+      console.log(err);
+      Toast({
+        message: '审核失败!失败原因：' + err,
+        position: 'bottom'
+      });
+    });
   }
 };

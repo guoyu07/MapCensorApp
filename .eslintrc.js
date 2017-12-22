@@ -25,6 +25,7 @@ module.exports = {
     // 开启4个空格缩进规则
     "indent": [2, 2, { "SwitchCase": 1 }],
     "semi": [2, "always"],//语句强制分号结尾
+    "no-undef": [0],//不能有未定义的变量
     "no-extra-parens": 2,//禁止非必要的括号
     "no-var": 0,//禁用var，用let和const代替
     "curly": [2, "all"],//必须使用 if(){} 中的{}

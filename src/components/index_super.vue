@@ -12,14 +12,14 @@
                 <!--<mt-search v-model="searchText" show>-->
                 <mt-cell class="user-list-cell" :title="user.fullName" :label="user.userName" :key="user.id"  v-for="user in list.list">
                   <div v-if="selected === '0'">
-                    <mt-button type="primary" @click="doCheckInit(user)">审核</mt-button>
+                    <mt-button type="primary" size="small" @click="doCheckInit(user)">审核</mt-button>
                   </div>
                   <div v-if="selected === '1,3'">
-                    <mt-button type="primary" @click="doForceInit(user, 99)">强制过期</mt-button>
-                    <mt-button type="danger" @click="doForceInit(user, 3)">停用</mt-button>
+                    <mt-button type="primary" size="small" @click="doForceInit(user, 99)">强制过期</mt-button>
+                    <mt-button type="danger" size="small" @click="doForceInit(user, 3)">停用</mt-button>
                   </div>
                   <div v-if="selected === '2'">
-                    <mt-button type="primary" @click="doForceInit(user, 0)">重新审核</mt-button>
+                    <mt-button type="primary" size="small" @click="doForceInit(user, 0)">重新审核</mt-button>
                   </div>
                   <!--<span style="color: green">{{user.userName}}</span>-->
                 </mt-cell>
@@ -206,12 +206,12 @@ export default {
   },
   watch: {
     // tab切换触发查询
-    selected (value, newVal) {
+    selected (value, oldVal) {
       this.$store.getters.list.list = [];
       this.initData();
       this.getUserList();
     },
-    timeLine (value, newVal) {
+    timeLine (value, oldVal) {
 //      this.topStatus = '';
       for (let i = 0; i < self.$refs.length; i++) {
         this.tabList[i].topStatus = '';
