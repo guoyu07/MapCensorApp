@@ -15,11 +15,11 @@
                     <mt-button type="primary" @click="doCheckInit(user)">审核</mt-button>
                   </div>
                   <div v-if="selected === '1,3'">
-                    <mt-button type="primary">强制过期</mt-button>
-                    <mt-button type="danger">停用</mt-button>
+                    <mt-button type="primary" @click="doForceInit(user, 99)">强制过期</mt-button>
+                    <mt-button type="danger" @click="doForceInit(user, 3)">停用</mt-button>
                   </div>
                   <div v-if="selected === '2'">
-                    <mt-button type="primary">重新审核</mt-button>
+                    <mt-button type="primary" @click="doForceInit(user, 0)">重新审核</mt-button>
                   </div>
                   <!--<span style="color: green">{{user.userName}}</span>-->
                 </mt-cell>
@@ -174,15 +174,30 @@ export default {
         }
       });
     },
+    // 强制过期/停用/重新审核
+    doForceInit (user, status) {
+      let self = this;
+      MessageBox({
+        title: '提示',
+        message: '确定执行此操作?',
+        showCancelButton: true,
+        callback (data) {
+          self.selectUser = user;
+          if (data === 'confirm') {
+            self.userStatus = status;
+          } else {  // 取消
+            return;
+          }
+          self.doCheckUser();
+        }
+      });
+    },
     // 初始化数据
     initData () {
       this.pageNum = 1;
       this.pageSize = 20;
     }
   },
-  //    computed: mapGetters([
-  //        'user'
-  //    ]),
   computed: {
     list () {
       console.log(this.$store.getters);
@@ -201,13 +216,6 @@ export default {
       for (let i = 0; i < self.$refs.length; i++) {
         this.tabList[i].topStatus = '';
         this.$refs[i].loadmore.onTopLoaded();
-      }
-    },
-    // 搜索内容 过滤数据
-    searchText (value, newVal) {
-      console.log(newVal);
-      for (let i = 0; i < this.userList.length; i++) {
-
       }
     }
   },
