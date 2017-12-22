@@ -3,6 +3,7 @@ import Register from '@/components/register';
 import IndexSuper from '@/components/index_super';
 import IndexManager from '@/components/index_manager';
 import IndexWorker from '@/components/index_worker';
+import CaseList from '@/components/case_list';
 // const Login = resolve => require(['@/components/login.vue'], resolve); //实现组件按需加载
 // const Register = resolve => require(['@/components/register.vue'], resolve);
 // const IndexSuper = resolve => require(['@/components/index_super.vue'], resolve);
@@ -29,6 +30,10 @@ export default [{
   path: '/index_worker',
   component: IndexWorker,
   name: 'index_worker'
+}, {
+  path: '/case_list',
+  component: CaseList,
+  name: 'case_list'
 }, {
   path: '*',
   component: Login,

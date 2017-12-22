@@ -1,11 +1,11 @@
 <template>
   <div class="app">
-		<mt-header title="" fixed>
-      <router-link to="/" slot="left" v-if="!user.username">
-        <!--<mt-button icon="back">返回</mt-button>-->
+		<mt-header :title="user.username?user.username:'审图'" fixed>
+      <mt-button icon="back" slot="left" v-if="user.username" @click="goHistory">返回</mt-button>
+      <!--<router-link to="/" slot="center" v-if="!user.username">
     		<img src="./assets/logo.png">
-      </router-link>
-      <router-link to="/" slot="left" v-if="user.username">
+      </router-link>-->
+      <router-link to="/" slot="center" v-if="user.username">
     		<mt-button>{{user.username}}你好</mt-button>
       </router-link>
       <mt-button @click="layout()" slot="right" v-if="user.username">退出</mt-button>
@@ -25,9 +25,6 @@
 			</mt-navbar>
     </div>
     <div v-else>
-      <!-- <router-link v-if="user.role == 'superManager'" to="/index_super"></router-link>
-      <router-link v-if="user.role == 'manager'" to="/index_manager"></router-link>
-      <router-link v-if="user.role == 'worker'" to="/index_worker"></router-link> -->
     </div>
     <transition name="slide">
       <router-view></router-view>
@@ -50,6 +47,10 @@ export default {
       this.$store.dispatch('layout');
       this.$router.push({ path: '/login' });
       console.log(this.$store.getters);
+    },
+    // 跳转
+    goHistory () {
+      this.$router.go(-1);
     }
   },
   computed: {
