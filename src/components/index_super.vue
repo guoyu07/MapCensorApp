@@ -33,7 +33,7 @@
           </mt-tab-container>
           <mt-spinner type="triple-bounce" v-show="loading" color="#26a2ff"></mt-spinner>
           <mt-tabbar v-model="selected" class="is-fixed">
-              <mt-tab-item :id="item.id" v-for="item in tabList">
+              <mt-tab-item :id="item.id" :key="item.index" v-for="item in tabList">
                 <i slot="icon" :class="item.icon"></i>
                 <div>{{item.name}}</div>
               </mt-tab-item>
