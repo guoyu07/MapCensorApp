@@ -22,7 +22,12 @@
         obj.username = this.username || '';
         obj.password = this.password || '';
         this.$store.dispatch('login', obj);
-        // 调用action发送请求
+//        this.axios.post('http://192.168.4.189:3000/api/om/user/login', {
+//          userName: obj.username,
+//          password: obj.password
+//        }).then(function (data) {
+//          console.log(data);
+//        });
       }
     }
   };

@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="app" id="app">
 		<mt-header :title="user.username?user.username:'审图'" fixed>
       <mt-button icon="back" slot="left" v-if="user.username" @click="goHistory">返回</mt-button>
       <!--<router-link to="/" slot="center" v-if="!user.username">
@@ -50,7 +50,7 @@ export default {
     },
     // 跳转
     goHistory () {
-      this.$router.go(-1);
+      this.$router.back(-1);
     }
   },
   computed: {

@@ -3,6 +3,7 @@ const GET_LIST = 'GET_LIST';  // 请求列表数据
 const GET_LIST_MORE = 'GET_LIST_MORE';  // 请求更多数据
 const GET_PROJECT_LIST = 'GET_PROJECT_LIST';  // 请求项目列表数据
 const GET_PROJECT_MORE = 'GET_PROJECT_MORE';  // 请求更多项目数据
+const SET_TOKEN = 'SET_TOKEN';  // 赋值token
 
 export default {
   [SHOW_USER] (state, value) {
@@ -29,5 +30,8 @@ export default {
   [GET_PROJECT_MORE] (state, value) {
     state.list = state.list.concat(value.projectList);
     state.timeLine = value.timeLine;
+  },
+  [SET_TOKEN] (state, value) {
+    state.token = value;
   }
 };
