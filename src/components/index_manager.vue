@@ -10,16 +10,14 @@
         <mt-loadmore :top-method="loadTopRefresh" :top-status.sync="item.topStatus" ref="loadmore" v-infinite-scroll="loadMoreList"
                      infinite-scroll-disabled="loading" infinite-scroll-distance="10">
           <!--<mt-search v-model="searchText" show>-->
-          <mt-cell class="user-list-cell" :title="pro.projectName" :label="pro.projectDesc" :key="pro.id"  v-for="pro in list.list">
-            <div v-if="selected === '2'">
-              <mt-button type="primary" size="small" @click="doSubmitInit(pro, 3)">通过</mt-button>
-              <mt-button type="danger" size="small" @click="doSubmitInit(pro, 4)">不通过</mt-button>
-            </div>
-            <!--<div v-if="selected === '3,4'">
-              <mt-button type="primary" size="small" @click="doForceInit(user, 99)">强制过期</mt-button>
-              <mt-button type="danger" size="small" @click="doForceInit(user, 3)">停用</mt-button>
-            </div>-->
-          </mt-cell>
+          <div v-on:click="popupInfo(pro)">
+            <mt-cell class="user-list-cell" :title="pro.projectName" :label="pro.projectDesc" :key="pro.id"  v-for="pro in list.list" is-link>
+              <div v-if="selected === '2'">
+                <mt-button type="primary" size="small" @click="doSubmitInit(pro, 3)">通过</mt-button>
+                <mt-button type="danger" size="small" @click="doSubmitInit(pro, 4)">不通过</mt-button>
+              </div>
+            </mt-cell>
+          </div>
           <!--</mt-search>-->
           <div slot="top" class="mint-loadmore-top">
             <span v-show="item.topStatus !== 'loading'" :class="{ 'rotate': item.topStatus === 'drop' }">↓</span>
@@ -35,6 +33,20 @@
         <div>{{item.name}}</div>
       </mt-tab-item>
     </mt-tabbar>
+    <mt-popup class="popup-model" position="right" popup-transition="popup-fade" v-model="showInfo" modal="true">
+      <div class="popup-title">
+        <i class="mintui mintui-back close-popup" @click="popupInfo"></i>
+      </div>
+      <div class="popup-content">
+        <mt-cell title="项目编号" :value="selectProject.id"></mt-cell>
+        <mt-cell title="项目名称" :value="selectProject.projectName"></mt-cell>
+        <mt-cell title="项目描述" :value="selectProject.projectDesc"></mt-cell>
+        <mt-cell title="问题数" :value="selectProject.issueTotal"></mt-cell>
+        <mt-cell title="提交时间" :value="selectProject.submitAt"></mt-cell>
+        <mt-cell title="审核状态" :value="selectProject.projectStatus"></mt-cell>
+        <mt-cell title="审核时间" :value="selectProject.auditedAt"></mt-cell>
+      </div>
+    </mt-popup>
   </div>
 </template>
 <script>
@@ -53,6 +65,7 @@
         pageSize: 20,
         timeLine: this.$store.getters.list.timeLine,
         loading: false,
+        showInfo: false,
 //      searchText: '', // 搜索内容
         tabList: [
           {id: '2', name: '待审核', index: 0, topStatus: '', icon: 'fa fa-eye'},
@@ -80,6 +93,13 @@
           self.loading = false;
         };
         this.$store.dispatch('getProjectList', obj);
+      },
+      // 详情
+      popupInfo (project) {
+        if (project) {
+          this.selectProject = project;
+        }
+        this.showInfo = !this.showInfo;
       },
       // 顶部下拉刷新列表
       loadTopRefresh () {
