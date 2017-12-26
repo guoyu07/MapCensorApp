@@ -27,7 +27,6 @@ module.exports = {
     "semi": [2, "always"],//语句强制分号结尾
     "no-undef": [0],//不能有未定义的变量
     "no-extra-parens": 2,//禁止非必要的括号
-    "no-caller": 0,//禁止使用arguments.caller或arguments.callee
     "no-var": 0,//禁用var，用let和const代替
     "curly": [2, "all"],//必须使用 if(){} 中的{}
     "radix": 1,//parseInt必须指定第二个参数

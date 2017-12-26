@@ -7,24 +7,6 @@ const App = {
     superManager: [{id: '0', name: '待审核'}, {id: '1,3', name: '审核通过'}, {id: '2', name: '审核不通过'}],
     worker: [{id: '', name: '待作业'}, {id: '', name: '已提交'}, {id: '', name: '已完成'}, {id: '', name: '案例列表'}],
     manager: [{id: '0', name: '待审核'}, {id: '1,3', name: '已审核'}, {id: '2', name: '案例列表'}]
-  },
-  mergeJSON (minor, main) {
-    for (var key in minor) {
-      if (main[key] === undefined) {  // 不冲突的，直接赋值
-        main[key] = minor[key];
-        continue;
-      }
-
-      // 冲突了，如果是Object，看看有么有不冲突的属性
-      // 不是Object 则以main为主，忽略即可。故不需要else
-      if (this.isJSON(minor[key])) {
-        // arguments.callee 递归调用，并且与函数名解耦
-        arguments.callee(minor[key], main[key]);
-      }
-    }
-  },
-  isJSON (target) {
-    return typeof target === 'object' && target.constructor === Object;
   }
 };
 
