@@ -10,7 +10,7 @@
               <mt-loadmore :top-method="loadTopRefresh" :top-status.sync="item.topStatus" ref="loadmore" v-infinite-scroll="loadMoreList"
                            infinite-scroll-disabled="loading" infinite-scroll-distance="10">
                 <!--<mt-search v-model="searchText" show>-->
-                <mt-cell class="user-list-cell" :title="user.fullName" :label="user.userName" :key="user.id"  v-for="user in list.list">
+                <mt-cell class="user-list-cell" :title="user.fullName" :label="user.userName" :key="user.id"  v-for="user in list.userList">
                   <div v-if="selected === '0'">
                     <mt-button type="primary" size="small" @click="doCheckInit(user)">审核</mt-button>
                   </div>
@@ -52,7 +52,7 @@ export default {
     return {
       selected: '0',
       topStatus: '',
-      userList: this.$store.getters.list.list,
+      userList: this.$store.getters.list.userList,
       pageNum: 1,
       pageSize: 20,
       timeLine: this.$store.getters.list.timeLine,
@@ -97,7 +97,7 @@ export default {
     // 加载更多
     loadMoreList () {
       // 数据未满20*?，不用加载更多
-      if (this.list.list.length < this.pageNum * this.pageSize) {
+      if (this.list.userList.length < this.pageNum * this.pageSize) {
         return;
       }
       console.log('加载更多');
@@ -207,7 +207,7 @@ export default {
   watch: {
     // tab切换触发查询
     selected (value, oldVal) {
-      this.$store.getters.list.list = [];
+      this.$store.getters.list.userList = [];
       this.initData();
       this.getUserList();
     },

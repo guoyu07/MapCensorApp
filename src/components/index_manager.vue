@@ -13,6 +13,7 @@
           <div v-on:click="popupInfo(pro)"  v-for="pro in list.list" :key="pro.id">
             <mt-cell class="user-list-cell" :title="pro.projectName" :label="pro.projectDesc" is-link>
               <div v-if="selected === '2'">
+                <div style="display: inline-block;">{{((pro.audited + pro.errorCount)/(pro.issueTotal)) * 100}}%</div>
                 <mt-button type="primary" size="small" @click="doSubmitInit(pro, 3, $event)">通过</mt-button>
                 <mt-button type="danger" size="small" @click="doSubmitInit(pro, 4, $event)">不通过</mt-button>
               </div>
@@ -51,13 +52,13 @@
         <mt-cell title="待审核" :value="selectProject.waitAudited"></mt-cell>
         <mt-cell title="错误数" :value="selectProject.errorCount"></mt-cell>
         <mt-cell title="进度">
-          <mt-progress :value="20" :bar-height="5">
-            <div slot="start">20%</div>
+        </mt-cell>
+        <div style="padding: 0 10px;">
+          <mt-progress :value="((selectProject.audited + selectProject.errorCount)/(selectProject.issueTotal)) * 100">
+            <div slot="start">{{((selectProject.audited + selectProject.errorCount)/(selectProject.issueTotal)) * 100}}%</div>
             <div slot="end">100%</div>
           </mt-progress>
-        </mt-cell>
-
-        <mt-progress :value="20" :bar-height="5"></mt-progress>
+        </div>
       </div>
     </mt-popup>
     <mt-popup class="popup-model" position="right" v-if="selected == '3,4'" popup-transition="popup-fade" v-model="showInfo" modal="true">
@@ -83,7 +84,7 @@
 </template>
 <script>
   // import {mapGetters} from 'vuex';
-  import {mapGetters, mapState} from 'vuex';
+//  import {mapGetters, mapState} from 'vuex';
   import './../less/index_main.less';
   import Application from './../application.js';
   import { MessageBox } from 'mint-ui';
