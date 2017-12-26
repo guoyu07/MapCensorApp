@@ -10,11 +10,11 @@
         <mt-loadmore :top-method="loadTopRefresh" :top-status.sync="item.topStatus" ref="loadmore" v-infinite-scroll="loadMoreList"
                      infinite-scroll-disabled="loading" infinite-scroll-distance="10">
           <!--<mt-search v-model="searchText" show>-->
-          <div v-on:click="popupInfo(pro)">
-            <mt-cell class="user-list-cell" :title="pro.projectName" :label="pro.projectDesc" :key="pro.id"  v-for="pro in list.list" is-link>
+          <div v-on:click="popupInfo(pro)"  v-for="pro in list.list" :key="pro.id">
+            <mt-cell class="user-list-cell" :title="pro.projectName" :label="pro.projectDesc" is-link>
               <div v-if="selected === '2'">
-                <mt-button type="primary" size="small" @click="doSubmitInit(pro, 3)">通过</mt-button>
-                <mt-button type="danger" size="small" @click="doSubmitInit(pro, 4)">不通过</mt-button>
+                <mt-button type="primary" size="small" @click="doSubmitInit(pro, 3, $event)">通过</mt-button>
+                <mt-button type="danger" size="small" @click="doSubmitInit(pro, 4, $event)">不通过</mt-button>
               </div>
             </mt-cell>
           </div>
@@ -33,9 +33,41 @@
         <div>{{item.name}}</div>
       </mt-tab-item>
     </mt-tabbar>
-    <mt-popup class="popup-model" position="right" popup-transition="popup-fade" v-model="showInfo" modal="true">
+    <mt-popup class="popup-model" position="right" v-if="selected == '2'" popup-transition="popup-fade" v-model="showInfo" modal="true">
       <div class="popup-title">
-        <i class="mintui mintui-back close-popup" @click="popupInfo"></i>
+        <div class="close-popup" @click="popupInfo">
+          <span class="mint-button-icon">
+            <i class="mintui mintui-back"></i>
+          </span>
+          <label class="mint-button-text">返回</label>
+        </div>
+      </div>
+      <div class="popup-content">
+        <mt-cell title="创建人" :value="selectProject.createUser"></mt-cell>
+        <mt-cell title="创建时间" :value="selectProject.createdAt"></mt-cell>
+        <mt-cell title="提交时间" :value="selectProject.submitAt"></mt-cell>
+        <mt-cell title="问题总数" :value="selectProject.issueTotal"></mt-cell>
+        <mt-cell title="已审核" :value="selectProject.audited"></mt-cell>
+        <mt-cell title="待审核" :value="selectProject.waitAudited"></mt-cell>
+        <mt-cell title="错误数" :value="selectProject.errorCount"></mt-cell>
+        <mt-cell title="进度">
+          <mt-progress :value="20" :bar-height="5">
+            <div slot="start">20%</div>
+            <div slot="end">100%</div>
+          </mt-progress>
+        </mt-cell>
+
+        <mt-progress :value="20" :bar-height="5"></mt-progress>
+      </div>
+    </mt-popup>
+    <mt-popup class="popup-model" position="right" v-if="selected == '3,4'" popup-transition="popup-fade" v-model="showInfo" modal="true">
+      <div class="popup-title">
+        <div class="close-popup" @click="popupInfo">
+          <span class="mint-button-icon">
+            <i class="mintui mintui-back"></i>
+          </span>
+          <label class="mint-button-text">返回</label>
+        </div>
       </div>
       <div class="popup-content">
         <mt-cell title="项目编号" :value="selectProject.id"></mt-cell>
@@ -70,10 +102,10 @@
         tabList: [
           {id: '2', name: '待审核', index: 0, topStatus: '', icon: 'fa fa-eye'},
           {id: '3,4', name: '已审核', index: 1, topStatus: '', icon: 'fa fa-check'},
-          {id: '-1', name: '案例列表', index: 2, topStatus: '', icon: 'fa fa-warning'}
+          {id: '-1', name: '案例列表', index: 2, topStatus: '', icon: 'fa fa-list'}
         ],
         projectStatus: '', // 状态
-        selectProject: ''
+        selectProject: {}
       };
     },
     methods: {
@@ -132,8 +164,9 @@
         this.$store.dispatch('checkProject', obj);
       },
       // 提交
-      doSubmitInit (pro, status) {
+      doSubmitInit (pro, status, event) {
         let self = this;
+        event.cancelBubble = true;
         MessageBox({
           title: '提示',
           message: '确定执行此操作?',
