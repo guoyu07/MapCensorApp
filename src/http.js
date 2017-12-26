@@ -31,6 +31,16 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
   response => {
+    if (response) {
+      if (response.data.errorCode === -1 && response.data.message === 'jwt expired') {
+        // token过期
+        store.commit('SHOW_USER', {});
+        router.replace({
+          path: 'login',
+          query: {redirect: router.currentRoute.fullPath}
+        });
+      }
+    }
     return response;
   },
   error => {

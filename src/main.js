@@ -5,6 +5,7 @@ import App from './App';
 import VueRouter from 'vue-router';
 import router from './router';
 import axios from './http.js';
+import Application from './application.js';
 
 import MintUI from 'mint-ui';
 import store from './store/index.js'; // import 刚创建的 store
@@ -23,6 +24,7 @@ Vue.config.productionTip = false;
 router.replace('/index');
 // 将axios挂载到prototype上，在组件中可以直接使用this.axios访问
 Vue.prototype.axios = axios;
+Vue.prototype.app = Application;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
