@@ -15,11 +15,11 @@ export default {
   },
   [GET_LIST] (state, value) {
     localStorage.setItem('list', JSON.stringify(value));
-    state.list = value.userList;
+    state.userList = value.userList;
     state.timeLine = value.timeLine;
   },
   [GET_LIST_MORE] (state, value) {
-    state.list = state.list.concat(value.userList);
+    state.userList = state.userList.concat(value.userList);
     state.timeLine = value.timeLine;
   },
   [GET_PROJECT_LIST] (state, value) {
