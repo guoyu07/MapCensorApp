@@ -10,7 +10,7 @@
       </router-link>
       <mt-button @click="layout()" slot="right" v-if="user.username">退出</mt-button>
     </mt-header>
-    <div v-if="!user.username">
+    <div v-if="!user.username" style="padding-top: 40px;">
     	<mt-navbar v-model="selected" class="tab-container">
 			  <router-link class="tab-title" to="/login">
           <mt-tab-item id="1" class="tab-content">

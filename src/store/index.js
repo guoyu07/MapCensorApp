@@ -10,6 +10,7 @@ Vue.use(Vuex);
 const state = {
   username: '',
   list: [],
+  userList: [],
   role: '',
   strLength: '',
   timeLine: '',

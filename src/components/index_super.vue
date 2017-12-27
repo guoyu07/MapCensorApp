@@ -10,19 +10,21 @@
               <mt-loadmore :top-method="loadTopRefresh" :top-status.sync="item.topStatus" ref="loadmore" v-infinite-scroll="loadMoreList"
                            infinite-scroll-disabled="loading" infinite-scroll-distance="10">
                 <!--<mt-search v-model="searchText" show>-->
-                <mt-cell class="user-list-cell" :title="user.fullName" :label="user.userName" :key="user.id"  v-for="user in list.userList">
-                  <div v-if="selected === '0'">
-                    <mt-button type="primary" size="small" @click="doCheckInit(user)">审核</mt-button>
-                  </div>
-                  <div v-if="selected === '1,3'">
-                    <mt-button type="primary" size="small" @click="doForceInit(user, 99)">强制过期</mt-button>
-                    <mt-button type="danger" size="small" @click="doForceInit(user, 3)">停用</mt-button>
-                  </div>
-                  <div v-if="selected === '2'">
-                    <mt-button type="primary" size="small" @click="doForceInit(user, 0)">重新审核</mt-button>
-                  </div>
-                  <!--<span style="color: green">{{user.userName}}</span>-->
-                </mt-cell>
+                <div v-on:click="popupInfo(user)" v-for="user in user.userList">
+                  <mt-cell class="user-list-cell" :title="user.fullName" :label="user.userName" :key="user.id" is-link>
+                    <div v-if="selected === '0'">
+                      <mt-button type="primary" size="small" @click="doCheckInit(user)">审核</mt-button>
+                    </div>
+                    <div v-if="selected === '1,3'">
+                      <mt-button type="primary" size="small" @click="doForceInit(user, 99)">强制过期</mt-button>
+                      <mt-button type="danger" size="small" @click="doForceInit(user, 3)">停用</mt-button>
+                    </div>
+                    <div v-if="selected === '2'">
+                      <mt-button type="primary" size="small" @click="doForceInit(user, 0)">重新审核</mt-button>
+                    </div>
+                    <!--<span style="color: green">{{user.userName}}</span>-->
+                  </mt-cell>
+                </div>
                 <!--</mt-search>-->
                 <div slot="top" class="mint-loadmore-top">
                   <span v-show="item.topStatus !== 'loading'" :class="{ 'rotate': item.topStatus === 'drop' }">↓</span>
@@ -31,13 +33,38 @@
               </mt-loadmore>
             </mt-tab-container-item>
           </mt-tab-container>
-          <mt-spinner type="triple-bounce" v-show="loading" color="#26a2ff"></mt-spinner>
+          <mt-spinner class="load-more-gif" type="triple-bounce" v-show="loading" color="#26a2ff"></mt-spinner>
           <mt-tabbar v-model="selected" class="is-fixed">
               <mt-tab-item :id="item.id" :key="item.index" v-for="item in tabList">
                 <i slot="icon" :class="item.icon"></i>
                 <div>{{item.name}}</div>
               </mt-tab-item>
           </mt-tabbar>
+          <!--popup弹窗 详情-->
+          <mt-popup class="popup-model" position="right" popup-transition="popup-fade" v-model="showInfo" modal="true">
+            <div class="popup-title">
+              <div class="close-popup" @click="popupInfo">
+              <span class="mint-button-icon">
+                <i class="mintui mintui-back"></i>
+              </span>
+                <label class="mint-button-text">返回</label>
+              </div>
+            </div>
+            <div class="popup-content">
+              <mt-cell title="账号" :value="selectUser.userName"></mt-cell>
+              <mt-cell title="全称" :value="selectUser.fullName"></mt-cell>
+              <mt-cell title="邮箱" :value="selectUser.email"></mt-cell>
+              <mt-cell title="所属公司" :value="selectUser.company"></mt-cell>
+              <mt-cell title="电话" :value="selectUser.cellPhone"></mt-cell>
+              <mt-cell title="角色" v-if="selected == '1,3'" :value="selectUser.role">
+                <div v-if="selectUser.role == 'superManage'">超级管理员</div>
+                <div v-if="selectUser.role == 'manager'">管理员</div>
+                <div v-if="selectUser.role == 'worker'">作业员</div>
+              </mt-cell>
+              <mt-cell title="注册时间" :value="selectUser.createdAt"></mt-cell>
+              <mt-cell title="过期时间" v-if="selected == '0' || selected == '1,3'" :value="selectUser.expiredAt"></mt-cell>
+            </div>
+          </mt-popup>
         </div>
 </template>
 <script>
@@ -52,11 +79,12 @@ export default {
     return {
       selected: '0',
       topStatus: '',
-      userList: this.$store.getters.list.userList,
+      userList: this.$store.getters.user.userList,
       pageNum: 1,
       pageSize: 20,
-      timeLine: this.$store.getters.list.timeLine,
+      timeLine: this.$store.getters.user.timeLine,
       loading: false,
+      showInfo: false,
 //      searchText: '', // 搜索内容
       tabList: [
         {id: '0', name: '待审核', index: 0, topStatus: '', icon: 'fa fa-eye'},
@@ -97,7 +125,7 @@ export default {
     // 加载更多
     loadMoreList () {
       // 数据未满20*?，不用加载更多
-      if (this.list.userList.length < this.pageNum * this.pageSize) {
+      if (this.user.userList.length < this.pageNum * this.pageSize) {
         return;
       }
       console.log('加载更多');
@@ -192,6 +220,13 @@ export default {
         }
       });
     },
+    // 详情
+    popupInfo (user) {
+      if (user) {
+        this.selectUser = user;
+      }
+      this.showInfo = !this.showInfo;
+    },
     // 初始化数据
     initData () {
       this.pageNum = 1;
@@ -202,12 +237,16 @@ export default {
     list () {
       console.log(this.$store.getters);
       return this.$store.getters.list;
+    },
+    user () {
+      console.log(this.$store.getters);
+      return this.$store.getters.user;
     }
   },
   watch: {
     // tab切换触发查询
     selected (value, oldVal) {
-      this.$store.getters.list.userList = [];
+      this.$store.getters.user.userList = [];
       this.initData();
       this.getUserList();
     },

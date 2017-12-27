@@ -1,6 +1,6 @@
 <template>
-    <div class="caseList">
-      <div id="container" style="width: 100%; height:300px"></div>
+    <div class="caseList" style="width: 100%; height: 100%;">
+      <div id="container" style="width: 100%; height: 100%;"></div>
     </div>
 </template>
 <script>
