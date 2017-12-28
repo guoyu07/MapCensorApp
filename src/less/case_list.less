@@ -1,0 +1,96 @@
+.caseList {
+  .menu-left-icon {
+    position: fixed;
+    z-index: 2;
+    top: 50px;
+    left: 10px;
+    color: #fff;
+    font-size: 26px;
+  }
+  .map-add-btn {
+    position: fixed !important;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  .map-palette-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(38, 162, 255);
+    color: #fff;
+  }
+  .map-search-container {
+    margin-top: 40px;
+    .mint-searchbar {
+      background-color: #26a2ff;
+      .mint-searchbar-inner {
+        height: 24px;
+        margin-left: 30px;
+      }
+      .mint-searchbar-cancel {
+        color: #ffffff;
+        font-size: 14px;
+      }
+    }
+    .mint-search-list {
+      z-index: 1;
+      margin-top: 88px;
+      padding-top: 0;
+      .mint-search-list-warp {
+        .mint-cell {
+          .mint-cell-wrapper {
+            .mint-cell-title {
+              .mint-cell-text {}
+              .mint-cell-label {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 200px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .poi-list-panel {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    background-color: #fff;
+    border-top: 1px solid #3a3a3a;
+    .poi-list-container {
+      max-height: 250px;
+      overflow: auto;
+      margin-bottom: 42px;
+      .poi-list-item {
+        padding: 10px 5px;
+        margin-top: -1px;
+        border-top: 1px solid #9a9a9a;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .poi-list-content {
+
+        }
+        .poi-list-option {
+          .fa-check {
+            color: #26a2ff;
+          }
+        }
+      }
+    }
+    .poi-list-btn-group {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #fff;
+      border-top: 1px solid #b6b6b6;
+    }
+  }
+}
