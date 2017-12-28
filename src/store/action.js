@@ -32,6 +32,31 @@ let axiosGet = function (url, param, suc) {
     });
   });
 };
+// 地图post服务
+let mapAxiosPost = function (url, param, suc) {
+  if (!param) {
+    param = {};
+  }
+  axios.post(url, param).then(suc).catch(err => {
+    Toast({
+      message: '请求失败!失败原因：' + err,
+      position: 'bottom'
+    });
+  });
+};
+
+// 地图get服务
+let mapAxiosGet = function (url, param, suc) {
+  if (!param) {
+    param = {};
+  }
+  axios.get(url, {params: param}).then(suc).catch(err => {
+    Toast({
+      message: '请求失败!失败原因：' + err,
+      position: 'bottom'
+    });
+  });
+};
 
 export default {
   // 登录
@@ -379,5 +404,37 @@ export default {
     //     position: 'bottom'
     //   });
     // });
+  },
+  /**
+   * **************************** 腾讯地图服务 *********************************
+   */
+  // 地图搜索输入提示
+  autoCompleteList (context, obj) {
+    mapAxiosGet('/api/ws/place/v1/suggestion', {
+      keyword: obj.keyword,
+      key: Application.TX_KEY
+    }, res => {
+      console.log(res);
+      if (res.data.status === 0) {
+        if (obj.callback) {
+          obj.callback(res.data);
+        }
+      }
+    });
+  },
+  // 逆地址解析
+  geoReverse (context, obj) {
+    mapAxiosGet('/api/ws/geocoder/v1/', {
+      location: obj.location,
+      get_poi: 1,
+      key: Application.TX_KEY
+    }, res => {
+      console.log(res);
+      if (res.data.status === 0) {
+        if (obj.callback) {
+          obj.callback(res.data);
+        }
+      }
+    });
   }
 };

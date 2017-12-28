@@ -12,8 +12,6 @@ import store from './store/index.js'; // import 刚创建的 store
 import './../node_modules/mint-ui/lib/style.css';
 import './../node_modules/font-awesome/css/font-awesome.min.css';
 
-Vue.config.productionTip = false;
-
 Vue.use(VueRouter);
 Vue.use(MintUI);
 Vue.config.productionTip = false;
