@@ -16,7 +16,7 @@
         <div class="fa fa-save map-palette-btn" @touchstart="sub_log(2)"></div>
         <div class="fa fa-close map-palette-btn" @touchstart="sub_log(3)"></div>
       </mt-palette-button>
-      <div class="poi-list-panel" v-if="poiListSheet">
+      <div :class="{'poi-list-panel': true, 'slideIn': poiListSheet, 'slideOut': !poiListSheet}">
         <div class="poi-list-container">
           <div class="poi-list-item">
             <div class="poi-list-content">当前位置</div>
@@ -32,7 +32,8 @@
           </div>
         </div>
         <div class="poi-list-btn-group">
-          <mt-button size="large" :plain="true" @click="changeSheetStatus(false)">关闭</mt-button>
+          <mt-button size="normal" class="poi-list-btn" @click="changeSheetStatus(false)">关闭</mt-button>
+          <mt-button size="primary" class="poi-list-btn" @click="doSavePoi()">确定</mt-button>
         </div>
       </div>
     </div>
@@ -93,8 +94,6 @@
             self.marker.setAnimation('DROP');
           }
           self.getPoiByGeo();
-          console.log('您点击的位置为: [' + event.latLng.getLat() + ', ' +
-            event.latLng.getLng() + ']');
         });
       },
       // 打开左侧菜单栏
@@ -152,11 +151,15 @@
       changeSheetStatus (status) {
         this.poiListSheet = status;
       },
+      // 确定
+      doSavePoi () {
+        this.poiListSheet = false;
+      },
       // 选中底部列表中一条poi
       selectPoiRow (poi) {
         this.centerLatlng = new qq.maps.LatLng(poi.location.lat, poi.location.lng);
         this.selectPoi = poi;
-        this.map.setCenter(this.centerLatlng);
+        this.map.panTo(this.centerLatlng);
         this.marker.setAnimation('DOWN');
         this.marker.setPosition(this.centerLatlng);
       }
