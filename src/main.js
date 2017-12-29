@@ -11,9 +11,11 @@ import MintUI from 'mint-ui';
 import store from './store/index.js'; // import 刚创建的 store
 import './../node_modules/mint-ui/lib/style.css';
 import './../node_modules/font-awesome/css/font-awesome.min.css';
+import VeeValidate from 'vee-validate';
 
 Vue.use(VueRouter);
 Vue.use(MintUI);
+Vue.use(VeeValidate);
 Vue.config.productionTip = false;
 
 // const router = new VueRouter({
@@ -23,6 +25,7 @@ router.replace('/index');
 // 将axios挂载到prototype上，在组件中可以直接使用this.axios访问
 Vue.prototype.axios = axios;
 Vue.prototype.app = Application;
+Vue.prototype.mint = MintUI;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

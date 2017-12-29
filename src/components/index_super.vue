@@ -13,14 +13,14 @@
                 <div v-on:click="popupInfo(user)" v-for="user in user.userList">
                   <mt-cell class="user-list-cell" :title="user.fullName" :label="user.userName" :key="user.id" is-link>
                     <div v-if="selected === '0'">
-                      <mt-button type="primary" size="small" @click="doCheckInit(user)">审核</mt-button>
+                      <mt-button type="primary" size="small" @click="doCheckInit(user, $event)">审核</mt-button>
                     </div>
                     <div v-if="selected === '1,3'">
-                      <mt-button type="primary" size="small" @click="doForceInit(user, 99)">强制过期</mt-button>
-                      <mt-button type="danger" size="small" @click="doForceInit(user, 3)">停用</mt-button>
+                      <mt-button type="primary" size="small" @click="doForceInit(user, 99, $event)">强制过期</mt-button>
+                      <mt-button type="danger" size="small" @click="doForceInit(user, 3, $event)">停用</mt-button>
                     </div>
                     <div v-if="selected === '2'">
-                      <mt-button type="primary" size="small" @click="doForceInit(user, 0)">重新审核</mt-button>
+                      <mt-button type="primary" size="small" @click="doForceInit(user, 0, $event)">重新审核</mt-button>
                     </div>
                     <!--<span style="color: green">{{user.userName}}</span>-->
                   </mt-cell>
@@ -146,8 +146,9 @@ export default {
       this.$store.dispatch('checkUser', obj);
     },
     // 审核
-    doCheckInit (user) {
+    doCheckInit (user, event) {
       let self = this;
+      event.cancelBubble = true;
       MessageBox({
         title: '注册账号审核',
         message: `<div class="mint-radiolist">
@@ -203,8 +204,9 @@ export default {
       });
     },
     // 强制过期/停用/重新审核
-    doForceInit (user, status) {
+    doForceInit (user, status, evnet) {
       let self = this;
+      event.cancelBubble = true;
       MessageBox({
         title: '提示',
         message: '确定执行此操作?',
