@@ -82,24 +82,28 @@
         let self = this;
         // 添加监听事件
         qq.maps.event.addListener(this.map, 'click', function (event) {
-          self.centerLatlng = new qq.maps.LatLng(event.latLng.getLat(), event.latLng.getLng());
-          if (!self.marker) {
-            // marker 标注
-            self.marker = new qq.maps.Marker({
-              position: self.centerLatlng,
-              map: self.map,
-              animation: qq.maps.MarkerAnimation.DROP,
-              // 设置Marker可拖动
-              draggable: true,
-              // 自定义Marker图标为大头针样式
-              icon: new qq.maps.MarkerImage('./../src/assets/marker_red.png')
-            });
-          } else {
-            self.marker.setPosition(self.centerLatlng);
-            self.marker.setAnimation('DROP');
-          }
+          self.initMarker(event.latLng, 'red');
           self.getPoiByGeo();
         });
+      },
+      // 初始化marker
+      initMarker (latLng, type) {
+        this.centerLatlng = new qq.maps.LatLng(latLng.getLat(), latLng.getLng());
+        if (!this.marker) {
+          // marker 标注
+          this.marker = new qq.maps.Marker({
+            position: this.centerLatlng,
+            map: this.map,
+            animation: qq.maps.MarkerAnimation.DROP,
+            // 设置Marker可拖动
+            draggable: true,
+            // 自定义Marker图标为大头针样式
+            icon: new qq.maps.MarkerImage('./../src/assets/marker_' + type + '.png')
+          });
+        } else {
+          this.marker.setPosition(this.centerLatlng);
+          this.marker.setAnimation('DROP');
+        }
       },
       // 打开左侧菜单栏
       openMenuBar () {
@@ -177,9 +181,10 @@
       selectPoiRow (poi) {
         this.centerLatlng = new qq.maps.LatLng(poi.location.lat, poi.location.lng);
         this.selectPoi = poi;
+        this.initMarker(this.centerLatlng, 'red');
         this.map.panTo(this.centerLatlng);
-        this.marker.setAnimation('DOWN');
-        this.marker.setPosition(this.centerLatlng);
+//        this.marker.setAnimation('DOWN');
+//        this.marker.setPosition(this.centerLatlng);
       },
       // 根据名称搜索poi
       searchPoiByTitle (item) {
@@ -192,6 +197,7 @@
             self.nearbyPoiList = data.data;
             self.poiListSheet = true;
             self.searchAuto = [];
+            self.searchMap = '';
           }
         };
         this.$store.dispatch('searchPoiByTitle', param);
