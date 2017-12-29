@@ -2,12 +2,13 @@
     <div class="caseList" style="width: 100%; height: 100%;">
       <div id="mapContainer" style="width: 100%; height: 100%;">
         <i class="fa fa-user menu-left-icon" @click="openMenuBar"></i>
-        <mt-search v-model="searchMap" class="map-search-container" @keyup.native="autoCompleteList">
-          <mt-cell
-            v-for="item in searchAuto" :key="item.id"
-            :title="item.title" :label="item.address"
-            :value="item.province + ' - ' +  item.city">
-          </mt-cell>
+        <mt-search v-model="searchMap" class="map-search-container" placeholder="搜索地点" @keyup.native="autoCompleteList">
+          <div v-for="item in searchAuto" v-on:click="searchPoiByTitle(item)" :key="item.id">
+            <mt-cell
+              :title="item.title" :label="item.address"
+              :value="item.province + ' - ' +  item.city">
+            </mt-cell>
+          </div>
         </mt-search>
       </div>
       <mt-palette-button content="+" class="map-add-btn" @expand="main_log('expand')" @expanded="main_log('expanded')" @collapse="main_log('collapse')"
@@ -18,22 +19,26 @@
       </mt-palette-button>
       <div :class="{'poi-list-panel': true, 'slideIn': poiListSheet, 'slideOut': !poiListSheet}">
         <div class="poi-list-container">
-          <div class="poi-list-item">
-            <div class="poi-list-content">当前位置</div>
+          <div class="poi-list-item poi-list-now" v-if="handMarkPoi" @click="selectPoiRow(handMarkPoi)">
+            <!--<div class="poi-list-content">{{selectPoi.address}}</div>-->
+            <div class="poi-list-title">{{handMarkPoi.title}}</div>
             <div class="poi-list-option">
-              <i class="fa fa-check"></i>
+              <i class="fa fa-check" v-if="selectPoi && selectPoi.id == -1"></i>
             </div>
           </div>
           <div class="poi-list-item" @click="selectPoiRow(item)" v-for="item in nearbyPoiList">
-            <div class="poi-list-content">{{item.title}}</div>
+            <div class="poi-list-content">
+              <div class="poi-list-title">{{item.title}}</div>
+              <div class="poi-list-address">{{item.address}}</div>
+            </div>
             <div class="poi-list-option">
               <i class="fa fa-check" v-if="selectPoi && selectPoi.id == item.id"></i>
             </div>
           </div>
         </div>
         <div class="poi-list-btn-group">
-          <mt-button size="normal" class="poi-list-btn" @click="changeSheetStatus(false)">关闭</mt-button>
-          <mt-button size="primary" class="poi-list-btn" @click="doSavePoi()">确定</mt-button>
+          <mt-button class="poi-list-btn" @click.native="changeSheetStatus(false)">关闭</mt-button>
+          <mt-button class="poi-list-btn primary" @click.native="doSavePoi()">确定</mt-button>
         </div>
       </div>
     </div>
@@ -52,7 +57,8 @@
         searchResult: [],  // 搜索结果
         nearbyPoiList: [], // 附近poi结果集
         poiListSheet: false,
-        selectPoi: null
+        selectPoi: null,
+        handMarkPoi: null
       };
     },
     mounted: function () {
@@ -60,8 +66,7 @@
     },
     methods: {
       init () {
-        let centerLatlng = new qq.maps.LatLng(39.914850, 116.403765);
-        this.centerLatlng = centerLatlng;
+        this.centerLatlng = new qq.maps.LatLng(39.914850, 116.403765);
         let mapOptions = {
           zoom: 12,
           center: this.centerLatlng,
@@ -143,6 +148,18 @@
             console.log(data);
             self.nearbyPoiList = data.result.pois;
             self.poiListSheet = true;
+            self.selectPoi = {
+              address: data.result.address,
+              title: data.result.formatted_addresses.recommend,
+              id: -1,
+              location: data.result.location
+            };
+            self.handMarkPoi = {
+              id: -1,
+              title: data.result.formatted_addresses.recommend,
+              address: data.result.address,
+              location: data.result.location
+            };
           }
         };
         this.$store.dispatch('geoReverse', searchParam);
@@ -154,6 +171,7 @@
       // 确定
       doSavePoi () {
         this.poiListSheet = false;
+        console.log(this.selectPoi);
       },
       // 选中底部列表中一条poi
       selectPoiRow (poi) {
@@ -162,6 +180,21 @@
         this.map.panTo(this.centerLatlng);
         this.marker.setAnimation('DOWN');
         this.marker.setPosition(this.centerLatlng);
+      },
+      // 根据名称搜索poi
+      searchPoiByTitle (item) {
+        let self = this;
+        let param = {
+          keyword: item.title,
+          boundary: 'region(' + item.city + ',1)',
+          callback: data => {
+            console.log(data);
+            self.nearbyPoiList = data.data;
+            self.poiListSheet = true;
+            self.searchAuto = [];
+          }
+        };
+        this.$store.dispatch('searchPoiByTitle', param);
       }
     }
   };

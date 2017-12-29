@@ -436,5 +436,23 @@ export default {
         }
       }
     });
+  },
+  // 根据地名搜索详情
+  searchPoiByTitle (context, obj) {
+    mapAxiosGet('/api/ws/place/v1/search', {
+      keyword: obj.keyword,
+      // city_name：检索区域名称， 城市名字，如北京市。
+      // auto_extend：可选参数。 取值1：默认值，若当前城市搜索无结果，则自动扩大范围；
+      // 取值0：仅在当前城市搜索。
+      boundary: obj.boundary,
+      key: Application.TX_KEY
+    }, res => {
+      console.log(res);
+      if (res.data.status === 0) {
+        if (obj.callback) {
+          obj.callback(res.data);
+        }
+      }
+    });
   }
 };
