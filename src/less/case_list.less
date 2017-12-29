@@ -64,6 +64,15 @@
     bottom: 0;
     background-color: #fff;
     border-top: 1px solid #3a3a3a;
+    visibility: hidden;
+    animation-duration: .3s;
+    animation-fill-mode: both;
+    &.slideIn {
+      animation-name: slideInUp;
+    }
+    &.slideOut {
+      animation-name: slideOutDown;
+    }
     .poi-list-container {
       max-height: 250px;
       overflow: auto;
@@ -87,10 +96,38 @@
     }
     .poi-list-btn-group {
       position: fixed;
+      display: flex;
       bottom: 0;
       width: 100%;
       background-color: #fff;
       border-top: 1px solid #b6b6b6;
+      .poi-list-btn {
+        width: 50%;
+        border-radius: 0;
+      }
     }
+  }
+}
+@keyframes slideInUp {
+  from {
+    transform: translate3d(0, 100%, 0);
+    visibility: hidden;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+
+  to {
+    visibility: hidden;
+    transform: translate3d(0, 100%, 0);
   }
 }
