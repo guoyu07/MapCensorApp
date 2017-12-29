@@ -11,9 +11,11 @@ import MintUI from 'mint-ui';
 import store from './store/index.js'; // import 刚创建的 store
 import './../node_modules/mint-ui/lib/style.css';
 import './../node_modules/font-awesome/css/font-awesome.min.css';
+import VeeValidate from 'vee-validate';
 
 Vue.use(VueRouter);
 Vue.use(MintUI);
+Vue.use(VeeValidate);
 Vue.config.productionTip = false;
 
 // const router = new VueRouter({
