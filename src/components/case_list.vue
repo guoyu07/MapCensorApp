@@ -185,11 +185,16 @@
       // 根据名称搜索poi
       searchPoiByTitle (item) {
         let self = this;
+        this.mint.Indicator.open({
+          text: '加载中',
+          spinnerType: 'triple-bounce'
+        });
         let param = {
           keyword: item.title,
           boundary: 'region(' + item.city + ',1)',
           callback: data => {
             console.log(data);
+            this.mint.Indicator.close();
             self.nearbyPoiList = data.data;
             self.poiListSheet = true;
             self.searchAuto = [];
