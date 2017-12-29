@@ -57,8 +57,8 @@
         searchResult: [],  // 搜索结果
         nearbyPoiList: [], // 附近poi结果集
         poiListSheet: false,
-        selectPoi: null,
-        handMarkPoi: null
+        selectPoi: null,  // 所选poi
+        handMarkPoi: null // 手动打点
       };
     },
     mounted: function () {
@@ -150,20 +150,16 @@
           get_poi: type || 1,
           callback: data => {
             console.log(data);
+            let poi = {
+              address: data.result.address,
+              title: data.result.formatted_addresses.recommend,
+              id: -1,
+              location: data.result.location
+            };
             self.nearbyPoiList = data.result.pois;
             self.poiListSheet = true;
-            self.selectPoi = {
-              address: data.result.address,
-              title: data.result.formatted_addresses.recommend,
-              id: -1,
-              location: data.result.location
-            };
-            self.handMarkPoi = {
-              id: -1,
-              title: data.result.formatted_addresses.recommend,
-              address: data.result.address,
-              location: data.result.location
-            };
+            self.selectPoi = poi;
+            self.handMarkPoi = poi;
           }
         };
         this.$store.dispatch('geoReverse', searchParam);
@@ -198,6 +194,9 @@
             self.poiListSheet = true;
             self.searchAuto = [];
             self.searchMap = '';
+            item.id = -1;
+            self.handMarkPoi = item;
+            self.selectPoi = self.handMarkPoi;
           }
         };
         this.$store.dispatch('searchPoiByTitle', param);
