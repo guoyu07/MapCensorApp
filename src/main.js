@@ -26,6 +26,7 @@ router.replace('/index');
 Vue.prototype.axios = axios;
 Vue.prototype.app = Application;
 Vue.prototype.mint = MintUI;
+Vue.prototype.validate = VeeValidate;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

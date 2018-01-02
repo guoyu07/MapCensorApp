@@ -1,14 +1,14 @@
 <template>
     <div class="login">
-    	<mt-field label="账号" placeholder="账号" v-model="username"></mt-field>
-    	<mt-field label="全称" placeholder="全称" v-model="fullName"></mt-field>
+    	<mt-field v-validate="'required'" :state="errors.has('username') || !username ? 'error':'success'" label="账号" placeholder="账号" v-model="username"></mt-field>
+    	<mt-field v-validate="'required'" :state="errors.has('username') || !username ? 'error':'success'" label="全称" placeholder="全称" v-model="fullName"></mt-field>
     	<mt-field v-validate="'required|email'" :state="errors.has('email') || !email ? 'error':'success'" :class="{'input': true, 'is-danger': errors.has('email') }" label="邮箱" placeholder="邮箱" name="email" type="email" v-model="email"></mt-field>
       <!--<span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>-->
     	<mt-field label="电话" placeholder="电话" v-model="cellPhone"></mt-field>
-    	<mt-field label="公司" placeholder="公司" v-model="company"></mt-field>
-    	<mt-field label="密码" placeholder="密码" type="password" v-model="password"></mt-field>
-    	<mt-field label="确认密码" placeholder="确认密码" type="password" v-model="conformPsw"></mt-field>
-
+    	<mt-field v-validate="'required'" :state="errors.has('company') || !company ? 'error':'success'" label="公司" placeholder="公司" v-model="company"></mt-field>
+    	<mt-field v-validate="'required|confirmed: password'" :state="errors.has('password') || !password || password!=conformPsw? 'error':'success'" label="密码" placeholder="密码" type="password" v-model="password"></mt-field>
+    	<mt-field v-validate="'required|confirmed: conformPsw'" :state="errors.has('conformPsw') || !conformPsw || password!=conformPsw ? 'error':'success'" label="确认密码" placeholder="确认密码" type="password" v-model="conformPsw"></mt-field>
+      <span v-show="errors.has('conformPsw')" class="text-style" v-cloak> {{ errors.first('conformPsw') }} </span>
 		<mt-button type="primary" size="large" @click="register()">注册</mt-button>
     </div>
 </template>
@@ -36,7 +36,8 @@
         obj.fullName = this.fullName || '';
         obj.email = this.email || '';
         obj.conformPsw = this.conformPsw || '';
-        this.$store.dispatch('register', obj);
+        console.log(this.validate.errors);
+        // this.$store.dispatch('register', obj);
       }
     }
   };
