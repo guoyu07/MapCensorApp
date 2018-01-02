@@ -41,6 +41,8 @@
           <mt-button class="poi-list-btn primary" @click.native="doSavePoi()">确定</mt-button>
         </div>
       </div>
+      <!--子路由，匹配审核面板-->
+      <router-view></router-view>
     </div>
 </template>
 <script>
@@ -171,6 +173,7 @@
       // 确定
       doSavePoi () {
         this.poiListSheet = false;
+        this.$router.push('/case_list/censor');
         console.log(this.selectPoi);
       },
       // 选中底部列表中一条poi
