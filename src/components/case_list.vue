@@ -46,7 +46,6 @@
     </div>
 </template>
 <script>
-  import './../less/case_list.less';
   import markerRed from '../assets/marker_red.png';
   import markerBlue from '../assets/marker_blue.png';
   import markerGreen from '../assets/marker_green.png';
@@ -224,3 +223,6 @@
     }
   };
 </script>
+<style lang="less">
+  @import './../less/case_list.less';
+</style>
