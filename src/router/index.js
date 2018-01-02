@@ -8,6 +8,7 @@ import IndexSuper from '@/components/index_super';
 import IndexManager from '@/components/index_manager';
 import IndexWorker from '@/components/index_worker';
 import CaseList from '@/components/case_list';
+import CensorDlg from '@/components/censorDlg';
 
 Vue.use(VueRouter);
 // const Login = resolve => require(['@/components/login.vue'], resolve); //实现组件按需加载
@@ -56,6 +57,12 @@ const routes = [
     meta: {
       requireAuth: true
     },
+    children: [
+      {
+        path: 'censor',
+        component: CensorDlg
+      }
+    ],
     name: 'case_list'
   }, {
     path: '*',

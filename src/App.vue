@@ -32,8 +32,6 @@
   </div>
 </template>
 <script>
-import './less/index.less';
-
 export default {
   name: 'app',
   data () {
@@ -82,3 +80,7 @@ export default {
   store: this.$store
 };
 </script>
+<style lang="less">
+  @import './less/index.less';
+</style>
+
