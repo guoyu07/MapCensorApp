@@ -70,7 +70,7 @@
 <script>
 // import {mapGetters} from 'vuex';
 import {mapGetters, mapState} from 'vuex';
-import './../less/index_main.less';
+
 import Application from './../application.js';
 import { MessageBox } from 'mint-ui';
 export default {
@@ -266,3 +266,6 @@ export default {
   store: this.$store
 };
 </script>
+<style lang='less'>
+  @import './../less/index_main.less';
+</style>
