@@ -12,10 +12,11 @@ import store from './store/index.js'; // import 刚创建的 store
 import 'mint-ui/lib/style.css';
 import 'font-awesome/css/font-awesome.min.css';
 import VeeValidate from 'vee-validate';
+import zh from 'vee-validate/dist/locale/zh_CN';  // 引入中文文件
 
 Vue.use(VueRouter);
 Vue.use(MintUI);
-Vue.use(VeeValidate);
+
 Vue.config.productionTip = false;
 
 // const router = new VueRouter({
@@ -26,7 +27,7 @@ router.replace('/index');
 Vue.prototype.axios = axios;
 Vue.prototype.app = Application;
 Vue.prototype.mint = MintUI;
-Vue.prototype.validate = VeeValidate;
+Vue.use(VeeValidate);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

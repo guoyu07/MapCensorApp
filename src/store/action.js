@@ -132,7 +132,7 @@ export default {
       });
       return;
     }
-    if (obj.password !== obj.conformPsw) {
+    if (obj.password !== obj.confirmPsw) {
       Toast({
         message: '两次密码必须一致!',
         position: 'bottom'
