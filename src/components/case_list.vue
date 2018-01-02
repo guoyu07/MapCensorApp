@@ -45,6 +45,10 @@
 </template>
 <script>
   import './../less/case_list.less';
+  import markerRed from '../assets/marker_red.png';
+  import markerBlue from '../assets/marker_blue.png';
+  import markerGreen from '../assets/marker_green.png';
+
   export default {
     data () {
       return {
@@ -90,6 +94,14 @@
       initMarker (latLng, type) {
         this.centerLatlng = new qq.maps.LatLng(latLng.getLat(), latLng.getLng());
         if (!this.marker) {
+          let markerType;
+          if (type === 'red') {
+            markerType = markerRed;
+          } else if (type === 'blue') {
+            markerType = markerBlue;
+          } else {
+            markerType = markerGreen;
+          }
           // marker 标注
           this.marker = new qq.maps.Marker({
             position: this.centerLatlng,
@@ -98,7 +110,7 @@
             // 设置Marker可拖动
             draggable: true,
             // 自定义Marker图标为大头针样式
-            icon: new qq.maps.MarkerImage('./../src/assets/marker_' + type + '.png')
+            icon: new qq.maps.MarkerImage(markerType)
           });
         } else {
           this.marker.setPosition(this.centerLatlng);
@@ -119,7 +131,7 @@
             // 设置Marker可拖动
             draggable: true,
             // 自定义Marker图标为大头针样式
-            icon: new qq.maps.MarkerImage('./../src/assets/marker_red.png')
+            icon: new qq.maps.MarkerImage(markerRed)
           });
         }
 //        this.marker.setDraggable(true);
