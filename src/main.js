@@ -9,8 +9,8 @@ import Application from './application.js';
 
 import MintUI from 'mint-ui';
 import store from './store/index.js'; // import 刚创建的 store
-import './../node_modules/mint-ui/lib/style.css';
-import './../node_modules/font-awesome/css/font-awesome.min.css';
+import 'mint-ui/lib/style.css';
+import 'font-awesome/css/font-awesome.min.css';
 import VeeValidate from 'vee-validate';
 
 Vue.use(VueRouter);
