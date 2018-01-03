@@ -12,8 +12,8 @@
     name: 'login',
     data: function () {
       return {
-        username: this.username,
-        password: this.password
+        username: '',
+        password: ''
       };
     },
     methods: {
