@@ -222,6 +222,6 @@
     store: this.$store
   };
 </script>
-<style>
+<style lang="less">
   @import './../less/index_main.less';
 </style>

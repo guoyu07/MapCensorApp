@@ -61,37 +61,36 @@ let mapAxiosGet = function (url, param, suc) {
 export default {
   // 登录
   login (context, obj) {
-    if (Object.keys(obj).some(function (key) {
-      return obj[key] === '';
-    })) {
+    if (!obj.username || !obj.password) {
       Toast({
-        message: '用户名和密码不能为空',
+        message: '用户名和密码不能为空!',
         position: 'bottom'
       });
-    } else {
-      axiosPost('/om/user/login', {
-        userName: obj.username,
-        password: obj.password
-      }, res => {
-        if (res.data.errorCode > -1) {
-          context.commit('SHOW_USER', {
-            role: res.data.result.role,
-            username: obj.username,
-            password: obj.password
-          });
-          Application.TOKEN = res.data.result.token;
-          localStorage.setItem('token', Application.TOKEN);
-          Toast({
-            message: '登录成功!',
-            position: 'bottom'
-          });
-        } else {
-          Toast({
-            message: res.data.message,
-            position: 'bottom'
-          });
-        }
-      });
+      return;
+    }
+    axiosPost('/om/user/login', {
+      userName: obj.username,
+      password: obj.password
+    }, res => {
+      if (res.data.errorCode > -1) {
+        context.commit('SHOW_USER', {
+          role: res.data.result.role,
+          username: obj.username,
+          password: obj.password
+        });
+        Application.TOKEN = res.data.result.token;
+        localStorage.setItem('token', Application.TOKEN);
+        Toast({
+          message: '登录成功!',
+          position: 'bottom'
+        });
+      } else {
+        Toast({
+          message: res.data.message,
+          position: 'bottom'
+        });
+      }
+    });
       // axios.post(Application.SERVICE_URL + '/om/user/login', {
       //   userName: obj.username,
       //   password: obj.password
@@ -121,24 +120,8 @@ export default {
       //     position: 'bottom'
       //   });
       // });
-    }
   },
   register (context, obj) {
-    // 校验
-    if (!(obj.username && obj.fullName && obj.password && obj.email)) {
-      Toast({
-        message: '账号、全称、邮箱、密码必须填写!',
-        position: 'bottom'
-      });
-      return;
-    }
-    if (obj.password !== obj.conformPsw) {
-      Toast({
-        message: '两次密码必须一致!',
-        position: 'bottom'
-      });
-      return;
-    }
     axiosPost('/om/user/register', {
       userName: obj.username,
       password: obj.password,
