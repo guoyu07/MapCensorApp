@@ -16,6 +16,7 @@ import zh from 'vee-validate/dist/locale/zh_CN';  // 引入中文文件
 
 Vue.use(VueRouter);
 Vue.use(MintUI);
+Vue.use(VeeValidate);
 
 Vue.config.productionTip = false;
 
@@ -23,11 +24,6 @@ Vue.config.productionTip = false;
 //   routes
 // });
 router.replace('/index');
-// 将axios挂载到prototype上，在组件中可以直接使用this.axios访问
-Vue.prototype.axios = axios;
-Vue.prototype.app = Application;
-Vue.prototype.mint = MintUI;
-Vue.use(VeeValidate);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
