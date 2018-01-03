@@ -50,7 +50,8 @@ let mapAxiosGet = function (url, param, suc) {
   if (!param) {
     param = {};
   }
-  axios.get(url, {params: param}).then(suc).catch(err => {
+  param.key = Application.TX_KEY;
+  axios.get('/api/ws' + url, {params: param}).then(suc).catch(err => {
     Toast({
       message: '请求失败!失败原因：' + err,
       position: 'bottom'
@@ -194,7 +195,7 @@ export default {
             timeLine: Date.parse(new Date())
           });
         }
-        if (obj.callback()) {
+        if (obj.callback) {
           obj.callback();
         }
       } else {
@@ -250,7 +251,7 @@ export default {
       roleId: obj.roleId
     }, res => {
       if (res.data.errorCode > -1) {
-        if (obj.callback()) {
+        if (obj.callback) {
           obj.callback();
         }
       }
@@ -302,7 +303,7 @@ export default {
             timeLine: Date.parse(new Date())
           });
         }
-        if (obj.callback()) {
+        if (obj.callback) {
           obj.callback();
         }
       } else {
@@ -357,7 +358,7 @@ export default {
       projectStatus: obj.projectStatus
     }, res => {
       if (res.data.errorCode > -1) {
-        if (obj.callback()) {
+        if (obj.callback) {
           obj.callback();
         }
       }
@@ -388,14 +389,26 @@ export default {
     //   });
     // });
   },
+  // 案例列表
+  getCaseList (context, obj) {
+    axiosGet('/bs/case/list', {
+      pageSize: obj.pageSize,
+      pageNum: obj.pageNum
+    }, res => {
+      if (res.data.errorCode > -1) {
+        if (obj.callback) {
+          obj.callback(res.data.result);
+        }
+      }
+    });
+  },
   /**
    * **************************** 腾讯地图服务 *********************************
    */
   // 地图搜索输入提示
   autoCompleteList (context, obj) {
-    mapAxiosGet('/api/ws/place/v1/suggestion', {
-      keyword: obj.keyword,
-      key: Application.TX_KEY
+    mapAxiosGet('/place/v1/suggestion', {
+      keyword: obj.keyword
     }, res => {
       console.log(res);
       if (res.data.status === 0) {
@@ -407,10 +420,9 @@ export default {
   },
   // 逆地址解析
   geoReverse (context, obj) {
-    mapAxiosGet('/api/ws/geocoder/v1/', {
+    mapAxiosGet('/geocoder/v1/', {
       location: obj.location,
-      get_poi: 1,
-      key: Application.TX_KEY
+      get_poi: 1
     }, res => {
       console.log(res);
       if (res.data.status === 0) {
@@ -422,13 +434,12 @@ export default {
   },
   // 根据地名搜索详情
   searchPoiByTitle (context, obj) {
-    mapAxiosGet('/api/ws/place/v1/search', {
+    mapAxiosGet('/place/v1/search', {
       keyword: obj.keyword,
       // city_name：检索区域名称， 城市名字，如北京市。
       // auto_extend：可选参数。 取值1：默认值，若当前城市搜索无结果，则自动扩大范围；
       // 取值0：仅在当前城市搜索。
-      boundary: obj.boundary,
-      key: Application.TX_KEY
+      boundary: obj.boundary
     }, res => {
       console.log(res);
       if (res.data.status === 0) {

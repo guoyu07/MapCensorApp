@@ -7,12 +7,35 @@
     color: #fff;
     font-size: 26px;
   }
+  .menu-right-container {
+    position: fixed;
+    z-index: 2;
+    height: 48px;
+    top: 40px;
+    right: 0;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    width: 40px;
+    justify-content: center;
+    .menu-right-icon {
+      font-size: 26px;
+    }
+  }
   .map-add-btn {
-    position: fixed !important;
+    position: fixed;
     bottom: 10px;
     left: 0;
     right: 0;
     margin: auto;
+    width: 50px;
+    height: 50px;
+    background-color: #26a2ff;
+    border-radius: 50%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    color: #fff;
   }
   .map-palette-btn {
     width: 30px;
@@ -28,6 +51,7 @@
     margin-top: 40px;
     .mint-searchbar {
       background-color: #26a2ff;
+      padding-right: 40px;
       .mint-searchbar-inner {
         height: 24px;
         margin-left: 30px;
@@ -146,6 +170,30 @@
       }
     }
   }
+  .center-marker {
+    background: url('./../../src/assets/marker_red.png') no-repeat;
+    width: 22px;
+    height: 39px;
+    position: fixed;
+    top: -39px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: 3;
+    animation-duration: .8s;
+    animation-fill-mode: both;
+  }
+  .case-list-panel {
+    width: 40%;
+    height: 100%;
+    background-color: #fff;
+  }
+  .menu-bar-panel {
+    width: 40%;
+    height: 100%;
+    background-color: #fff;
+  }
 }
 @keyframes slideInUp {
   from {
@@ -170,3 +218,90 @@
     transform: translate3d(0, 100%, 0);
   }
 }
+
+@keyframes slideInLeft {
+  from {
+    transform: translate3d(-100%, 0, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.slideInLeft {
+  animation-name: slideInLeft;
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    visibility: hidden;
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+.slideOutRight {
+  animation-name: slideOutRight;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translate3d(100%, 0, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.slideInRight {
+  animation-name: slideInRight;
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    visibility: hidden;
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.slideOutLeft {
+  animation-name: slideOutLeft;
+}
+
+.bounce {
+  animation-name: bounce;
+  transform-origin: center bottom;
+}
+
+@keyframes bounce {
+  from, 20%, 53%, 80%, to {
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    transform: translate3d(0,0,0);
+  }
+
+  40%, 43% {
+    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    transform: translate3d(0, -30px, 0);
+  }
+
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    transform: translate3d(0, -15px, 0);
+  }
+
+  90% {
+    transform: translate3d(0,-4px,0);
+  }
+}
+

@@ -10,17 +10,18 @@
             </mt-cell>
           </div>
         </mt-search>
+        <div class="menu-right-container" @click="openCaseList">
+          <i class="fa fa-bars menu-right-icon"></i>
+        </div>
       </div>
-      <mt-palette-button content="+" class="map-add-btn" @expand="main_log('expand')" @expanded="main_log('expanded')" @collapse="main_log('collapse')"
-                         direction="t" :radius="80" ref="target_1" mainButtonStyle="color:#fff;background-color:#26a2ff;">
-        <div class="fa fa-plus map-palette-btn" @touchstart="sub_log(1)"></div>
-        <div class="fa fa-save map-palette-btn" @touchstart="sub_log(2)"></div>
-        <div class="fa fa-close map-palette-btn" @touchstart="sub_log(3)"></div>
-      </mt-palette-button>
+      <!--创建marker按钮-->
+      <div class="map-add-btn" v-on:click="createCase">
+        <i class="fa fa-plus"></i>
+      </div>
+      <div :class="{'center-marker': true, 'bounce': !searchMap && editStatus}" v-if="!searchMap && editStatus"></div>
       <div :class="{'poi-list-panel': true, 'slideIn': poiListSheet, 'slideOut': !poiListSheet}">
         <div class="poi-list-container">
-          <div class="poi-list-item poi-list-now" v-if="handMarkPoi" @click="selectPoiRow(handMarkPoi)">
-            <!--<div class="poi-list-content">{{selectPoi.address}}</div>-->
+          <div class="poi-list-item poi-list-now" v-if="handMarkPoi && handMarkPoi.title" @click="selectPoiRow(handMarkPoi)">
             <div class="poi-list-title">{{handMarkPoi.title}}</div>
             <div class="poi-list-option">
               <i class="fa fa-check" v-if="selectPoi && selectPoi.id == -1"></i>
@@ -41,6 +42,27 @@
           <mt-button class="poi-list-btn primary" @click.native="doSavePoi()">确定</mt-button>
         </div>
       </div>
+      <!--左侧tab列表-->
+      <mt-popup
+        class="menu-bar-panel"
+        v-model="tabMenuPanel"
+        :class="{'slideInLeft': tabMenuPanel, 'slideOutRight': !tabMenuPanel}"
+        position="left">
+        <div v-on:click="routerTo(1)"><mt-cell title="待审核"></mt-cell></div>
+        <div v-on:click="routerTo(2)"><mt-cell title="已审核"></mt-cell></div>
+      </mt-popup>
+      <!--右侧案例列表-->
+      <mt-popup
+        class="case-list-panel"
+        v-model="caseListPanel"
+        :class="{'slideInRight': caseListPanel, 'slideOutLeft': !caseListPanel}"
+        position="right">
+        <div v-for="item in caseList" v-on:click="showCaseInfo(item)" :key="item.id">
+          <mt-cell
+            :title="item.caseDesc">
+          </mt-cell>
+        </div>
+      </mt-popup>
       <!--子路由，匹配审核面板-->
       <router-view></router-view>
     </div>
@@ -63,7 +85,15 @@
         nearbyPoiList: [], // 附近poi结果集
         poiListSheet: false,
         selectPoi: null,  // 所选poi
-        handMarkPoi: null // 手动打点
+        handMarkPoi: null, // 手动打点
+        caseListPanel: false,  // 案例列表面板
+        caseList: [],
+        casePageNum: 10,
+        casePageSize: 1,  // 案例列表每页显示个数
+        tabMenuPanel: false,  // 左侧面板
+        caseMarkers: [], // 地图上案例marker
+        editStatus: false, // 编辑状态 false：查看 true：新建
+        selectCaseMarker: null  // 选中的案例marker
       };
     },
     mounted: function () {
@@ -86,62 +116,79 @@
         });
         let self = this;
         // 添加监听事件
-        qq.maps.event.addListener(this.map, 'click', function (event) {
-          self.initMarker(event.latLng, 'red');
+//        qq.maps.event.addListener(this.map, 'drag', function (event) {
+//          console.log('中心');
+//          if (self.marker) {
+//            self.marker.setPosition(self.map.getCenter());
+//            self.marker.moveTo(self.map.getCenter());
+//          } else {
+//            self.initMarker(self.map.getCenter(), 'red');
+//          }
+//        });
+        // 拖动地图
+        qq.maps.event.addListener(this.map, 'dragend', function () {
+//          self.initMarker(self.map.getCenter(), 'red');
+          console.log(self.map.getCenter().lat);
+          self.centerLatlng = self.map.getCenter();
+          self.map.setCenter(self.map.getCenter());
           self.getPoiByGeo();
         });
+        this.queryCaseList();
+      },
+      // 查询案例列表
+      queryCaseList () {
+        let self = this;
+        let param = {
+          pageSize: this.casePageNum,
+          pageNum: this.casePageSize,
+          callback: data => {
+            self.caseList = data.data;
+            if (self.caseList.length) {
+              for (let i = 0; i < self.caseList.length; i++) {
+                let latLng = new qq.maps.LatLng(self.caseList[i].marker.coordinates[1], self.caseList[i].marker.coordinates[0]);
+                self.createMarker(latLng, 'blue');
+              }
+            }
+          }
+        };
+        this.$store.dispatch('getCaseList', param);
       },
       // 初始化marker
-      initMarker (latLng, type) {
-        this.centerLatlng = new qq.maps.LatLng(latLng.getLat(), latLng.getLng());
-        if (!this.marker) {
-          let markerType;
-          if (type === 'red') {
-            markerType = markerRed;
-          } else if (type === 'blue') {
-            markerType = markerBlue;
-          } else {
-            markerType = markerGreen;
-          }
-          // marker 标注
-          this.marker = new qq.maps.Marker({
-            position: this.centerLatlng,
-            map: this.map,
-            animation: qq.maps.MarkerAnimation.DROP,
-            // 设置Marker可拖动
-            draggable: true,
-            // 自定义Marker图标为大头针样式
-            icon: new qq.maps.MarkerImage(markerType)
-          });
+      createMarker (latLng, type) {
+        let markerLatLng = new qq.maps.LatLng(latLng.getLat(), latLng.getLng());
+        let markerType;
+        if (type === 'red') {
+          markerType = markerRed;
+        } else if (type === 'blue') {
+          markerType = markerBlue;
         } else {
-          this.marker.setPosition(this.centerLatlng);
-          this.marker.setAnimation('DROP');
+          markerType = markerGreen;
         }
+        // marker 标注
+        this.caseMarkers.push(new qq.maps.Marker({
+          position: markerLatLng,
+          map: this.map,
+          animation: qq.maps.MarkerAnimation.DROP,
+          // 设置Marker可拖动
+          draggable: true,
+          // 自定义Marker图标为大头针样式
+          icon: new qq.maps.MarkerImage(markerType)
+        }));
+      },
+      // 创建marker
+      createCase () {
+        this.editStatus = true;
+        this.centerLatlng = this.map.getCenter();
+        this.getPoiByGeo();
       },
       // 打开左侧菜单栏
       openMenuBar () {
         console.log('打开左侧菜单');
+        this.tabMenuPanel = !this.tabMenuPanel;
       },
-      main_log (val) {
-        if (!this.marker) {
-          // marker 标注
-          this.marker = new qq.maps.Marker({
-            position: this.centerLatlng,
-            map: this.map,
-            animation: qq.maps.MarkerAnimation.DROP,
-            // 设置Marker可拖动
-            draggable: true,
-            // 自定义Marker图标为大头针样式
-            icon: new qq.maps.MarkerImage(markerRed)
-          });
-        }
-//        this.marker.setDraggable(true);
-//        this.marker.setAnimation('DOWN');
-        console.log('main_log', val);
-      },
-      sub_log (val) {
-        console.log('sub_log', val);
-        this.$refs.target_1.collapse();
+      // 打开案例列表面板
+      openCaseList () {
+        this.caseListPanel = !this.caseListPanel;
       },
       // 搜索提示
       autoCompleteList () {
@@ -158,21 +205,33 @@
       // 通过geo查询附近poi
       getPoiByGeo (type) {
         let self = this;
+        if (!this.editStatus) {
+          return;
+        }
         let searchParam = {
           location: self.centerLatlng.lat + ',' + self.centerLatlng.lng,
           get_poi: type || 1,
           callback: data => {
             console.log(data);
-            let poi = {
-              address: data.result.address,
-              title: data.result.formatted_addresses.recommend,
-              id: -1,
-              location: data.result.location
-            };
-            self.nearbyPoiList = data.result.pois;
-            self.poiListSheet = true;
-            self.selectPoi = poi;
-            self.handMarkPoi = poi;
+            if (data.result.formatted_addresses) {
+              let poi = {
+                address: data.result.address,
+                title: data.result.formatted_addresses.recommend,
+                id: -1,
+                location: data.result.location
+              };
+              self.nearbyPoiList = data.result.pois;
+              self.poiListSheet = true;
+              self.selectPoi = poi;
+              self.handMarkPoi = poi;
+            } else {
+              self.nearbyPoiList = [];
+              self.selectPoi = {
+                id: -1,
+                location: self.centerLatlng
+              };
+              self.handMarkPoi = null;
+            }
           }
         };
         this.$store.dispatch('geoReverse', searchParam);
@@ -180,6 +239,9 @@
       // 底部poi列表状态切换
       changeSheetStatus (status) {
         this.poiListSheet = status;
+        if (!status) {
+          this.editStatus = false;
+        }
       },
       // 确定
       doSavePoi () {
@@ -191,10 +253,8 @@
       selectPoiRow (poi) {
         this.centerLatlng = new qq.maps.LatLng(poi.location.lat, poi.location.lng);
         this.selectPoi = poi;
-        this.initMarker(this.centerLatlng, 'red');
+//        this.initMarker(this.centerLatlng, 'red');
         this.map.panTo(this.centerLatlng);
-//        this.marker.setAnimation('DOWN');
-//        this.marker.setPosition(this.centerLatlng);
       },
       // 根据名称搜索poi
       searchPoiByTitle (item) {
@@ -210,15 +270,46 @@
             console.log(data);
             this.$indicator.close();
             self.nearbyPoiList = data.data;
-            self.poiListSheet = true;
             self.searchAuto = [];
             self.searchMap = '';
             item.id = -1;
             self.handMarkPoi = item;
             self.selectPoi = self.handMarkPoi;
+            self.centerLatlng = new qq.maps.LatLng(self.selectPoi.location.lat, self.selectPoi.location.lng);
+            self.map.setCenter(self.centerLatlng);
+            if (!this.editStatus) {
+              self.poiListSheet = false;
+            } else {
+              self.poiListSheet = true;
+            }
           }
         };
         this.$store.dispatch('searchPoiByTitle', param);
+      },
+      // 展示案例详情
+      showCaseInfo (item) {
+        console.log(item);
+        this.centerLatlng = new qq.maps.LatLng(item.marker.coordinates[1], item.marker.coordinates[0]);
+        if (!this.selectCaseMarker) {
+          this.selectCaseMarker = new qq.maps.Marker({
+            position: this.centerLatlng,
+            map: this.map,
+            animation: qq.maps.MarkerAnimation.DROP,
+            // 设置Marker可拖动
+            draggable: true,
+            // 自定义Marker图标为大头针样式
+            icon: new qq.maps.MarkerImage(markerGreen)
+          });
+        } else {
+          this.selectCaseMarker.setPosition(this.centerLatlng);
+        }
+        this.map.setCenter(this.centerLatlng);
+        this.selectCaseMarker.setZIndex(3);
+        this.caseListPanel = false;
+      },
+      // 路由跳转待审核已审核
+      routerTo (type) {
+        this.$router.push({ path: '/index_manager' });
       }
     }
   };
