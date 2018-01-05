@@ -2,9 +2,7 @@
   <div class="list-panel">
     <div class="panel-header">
       <mt-button icon="back" type="primary" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;">返回</mt-button>
-      <!--<div class="header-search">-->
-        <mt-search v-model="searchText" class="header-search"></mt-search>
-      <!--</div>-->
+      <mt-search v-model="searchText" class="header-search"></mt-search>
     </div>
     <div class="primary">
       <ul class="cs-ul">
