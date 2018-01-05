@@ -70,6 +70,12 @@ const routes = [
     name: 'login'
   }];
 
+// 给VueRoute添加一个goBack方法，用于记录路由的前进后退状态 this.isBack = true
+VueRouter.prototype.goBack = function () {
+  this.isBack = true;
+  window.history.go(-1);
+};
+
 // 页面刷新时，重新赋值token
 if (window.localStorage.getItem('token')) {
   store.commit('SET_TOKEN', window.localStorage.getItem('token'));
@@ -81,6 +87,10 @@ const router = new VueRouter({
 
 // 判断是否需要登录权限 以及是否登录
 router.beforeEach((to, from, next) => {
+  // 如果跳转到login，注销token，退出登录
+  if (to.path === '/login') {
+    store.commit('SHOW_USER', {});
+  }
   if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
     if (store.state.token) {  // 通过vuex state获取当前的token是否存在
       next();
