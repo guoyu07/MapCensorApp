@@ -2,9 +2,9 @@
   <div class="list-panel">
     <div class="panel-header">
       <mt-button icon="back" type="primary" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;">返回</mt-button>
-      <div class="header-search">
-        <mt-search v-model="searchText"></mt-search>
-      </div>
+      <!--<div class="header-search">-->
+        <mt-search v-model="searchText" class="header-search"></mt-search>
+      <!--</div>-->
     </div>
     <div class="primary">
       <ul class="cs-ul">
@@ -64,15 +64,13 @@
       display: inline-block;
       width: 100%;
       font-size: 14px;
-      .mint-search {
-        height: 40px;
-        overflow: hidden;
-        .mint-searchbar {
-          background-color: #26a2ff;
-          padding: 0;
-          .mint-searchbar-cancel {
-            color: #ffffff;
-          }
+      height: 40px;
+      overflow: hidden;
+      .mint-searchbar {
+        background-color: #26a2ff;
+        padding: 0;
+        .mint-searchbar-cancel {
+          color: #ffffff;
         }
       }
     }
@@ -80,6 +78,9 @@
       padding: 0 10px;
       ul li {
         font-size: 0;
+        &:first-child {
+          background-color: inherit;
+         }
       div {
         display: inline-block;
         font-size: 14px;
