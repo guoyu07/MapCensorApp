@@ -52,16 +52,9 @@
         <div v-on:click="routerTo(2)"><mt-cell title="已审核"></mt-cell></div>
       </mt-popup>
       <!--右侧案例列表-->
-      <mt-popup
-        class="case-list-panel"
-        v-model="caseListPanel"
-        :class="{'slideInRight': caseListPanel, 'slideOutLeft': !caseListPanel}"
-        position="right">
-        <div v-for="item in caseList" v-on:click="showCaseInfo(item)" :key="item.id">
-          <mt-cell
-            :title="item.caseDesc">
-          </mt-cell>
-        </div>
+      <mt-popup class="case-list-panel" v-model="caseListPanel" position="right">
+        <!--<div v-on:click="showCaseInfo(item)"></div>-->
+        <case-list-panel v-bind:case-list="caseList" v-on:closeCaseListPanel="closeCaseListPanel"></case-list-panel>
       </mt-popup>
       <!--子路由，匹配审核面板-->
       <router-view></router-view>
@@ -71,8 +64,12 @@
   import markerRed from '../assets/marker_red.png';
   import markerBlue from '../assets/marker_blue.png';
   import markerGreen from '../assets/marker_green.png';
+  import caseListPanel from './caseListPanel.vue';
 
   export default {
+    components: {
+      caseListPanel
+    },
     data () {
       return {
         centerLatlng: null,
@@ -189,6 +186,10 @@
       // 打开案例列表面板
       openCaseList () {
         this.caseListPanel = !this.caseListPanel;
+      },
+      // 关闭案例列表面板
+      closeCaseListPanel () {
+        this.caseListPanel = false;
       },
       // 搜索提示
       autoCompleteList () {
