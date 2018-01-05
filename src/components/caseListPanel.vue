@@ -79,12 +79,12 @@
         &:first-child {
           background-color: inherit;
          }
-      div {
-        display: inline-block;
-        font-size: 14px;
-        text-align: center;
-        vertical-align: top;
-      }
+        div {
+          display: inline-block;
+          font-size: 14px;
+          text-align: center;
+          vertical-align: top;
+        }
         .seq { width: 10%; }
         .description { width: 43%; }
         .enclosure { width: 15%; }
