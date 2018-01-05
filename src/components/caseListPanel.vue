@@ -1,7 +1,7 @@
 <template>
   <div class="list-panel">
     <div class="panel-header">
-      <mt-button icon="back" type="primary" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;">返回</mt-button>
+      <mt-button icon="back" type="primary" size="small" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;">返回</mt-button>
       <mt-search v-model="searchText" class="header-search"></mt-search>
     </div>
     <div class="primary">
@@ -57,18 +57,18 @@
       padding: 5px 10px 0 81px;
       background-color: #26a2ff;
       font-size: 0;
-    }
-    .header-search {
-      display: inline-block;
-      width: 100%;
-      font-size: 14px;
-      height: 40px;
-      overflow: hidden;
-      .mint-searchbar {
-        background-color: #26a2ff;
-        padding: 0;
-        .mint-searchbar-cancel {
-          color: #ffffff;
+      .header-search {
+        display: inline-block;
+        width: 100%;
+        font-size: 14px;
+        height: 40px;
+        overflow: hidden;
+        .mint-searchbar {
+          background-color: #26a2ff;
+          padding: 0;
+          .mint-searchbar-cancel {
+            color: #ffffff;
+          }
         }
       }
     }
