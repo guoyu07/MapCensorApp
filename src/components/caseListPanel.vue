@@ -4,7 +4,8 @@
       <mt-button icon="back" type="primary" size="small" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;">返回</mt-button>
       <mt-search v-model="searchText" class="header-search"></mt-search>
     </div>
-    <div class="primary">
+    <mt-loadmore class="primary" :top-method="loadTop" ref="loadmore" :maxDistance="90"
+                 v-infinite-scroll="infiniteLoad" infinite-scroll-disabled="infiniteLoadingFlag" infinite-scroll-distance="10">
       <ul class="cs-ul">
         <li>
           <div class="seq"><span>序号</span></div>
@@ -20,22 +21,41 @@
           <div style="padding-left: 2%"><span>&gt;</span></div>
         </li>
       </ul>
-    </div>
+    </mt-loadmore>
+    <mt-popup v-model="editPanelFlag" position="bottom" :modal="false">
+      <case-edit-panel></case-edit-panel>
+    </mt-popup>
   </div>
 </template>
 
 <script>
+  import caseEditPanel from './caseEditPanel.vue';
+
   export default {
-    name: 'primary',
+    name: 'caseListPanel',
     props: ['caseList'],
+    components: {
+      caseEditPanel
+    },
     data: function () {
       return {
-        searchText: ''
+        searchText: '',
+        editPanelFlag: false
       };
+    },
+    mounted: {
+
     },
     methods: {
       closePanel () {
         this.$emit('closeCaseListPanel');
+      },
+      loadTop () {
+        console.log('load top ...');
+        this.$refs.loadmore.onTopLoaded();
+      },
+      infiniteLoad () {
+
       }
     },
     computed: {
