@@ -87,6 +87,7 @@
     width: 100%;
     bottom: 0;
     background-color: #fff;
+    z-index: 4;
     //border-top: 1px solid #3a3a3a;
     visibility: hidden;
     animation-duration: .3s;
@@ -104,7 +105,7 @@
       padding: 0 10px;
       .poi-list-item {
         padding: 5px 0;
-        margin-top: -1px;
+        //margin-top: -1px;
         border-top: 1px solid #e4e4e4;
         display: flex;
         flex-direction: row;
@@ -133,8 +134,12 @@
           }
         }
         .poi-list-content {
+          width: 90%;
           .poi-list-title {
             font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
           .poi-list-address {
             font-size: 12px;
@@ -142,10 +147,12 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            width: 340px;
+            //width: 340px;
           }
         }
         .poi-list-option {
+          width: 10%;
+          text-align: right;
           .fa-check {
             color: #26a2ff;
           }

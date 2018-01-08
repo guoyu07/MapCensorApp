@@ -26,8 +26,8 @@
     </div>
     <div v-else>
     </div>
-    <transition name="slide">
-      <router-view></router-view>
+    <transition :name="transitionName">
+      <router-view class="router-view"></router-view>
     </transition>
   </div>
 </template>
@@ -36,7 +36,8 @@ export default {
   name: 'app',
   data () {
     return {
-      selected: '1'
+      selected: '1',
+      transitionName: 'slide-left'
     };
   },
   methods: {
@@ -48,7 +49,21 @@ export default {
     },
     // 跳转
     goHistory () {
-      this.$router.back(-1);
+//      this.$router.back(-1);
+      this.$router.goBack();
+      console.log(this.$router);
+    }
+  },
+  // 监听路由的路径，可以通过不同的路径去选择不同的切换效果
+  watch: {
+    '$route' (to, from) {
+      let isBack = this.$router.isBack;  //  监听路由变化时的状态为前进还是后退
+      if (isBack) {
+        this.transitionName = 'slide-right';
+      } else {
+        this.transitionName = 'slide-left';
+      }
+      this.$router.isBack = false;
     }
   },
   computed: {

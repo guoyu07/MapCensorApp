@@ -166,8 +166,8 @@
           position: markerLatLng,
           map: this.map,
           animation: qq.maps.MarkerAnimation.DROP,
-          // 设置Marker可拖动
-          draggable: true,
+          // 设置Marker不可拖动
+          draggable: false,
           // 自定义Marker图标为大头针样式
           icon: new qq.maps.MarkerImage(markerType)
         }));
