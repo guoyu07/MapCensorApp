@@ -1,7 +1,7 @@
 <template>
   <div class="list-panel">
     <div class="panel-header">
-      <mt-button icon="back" type="primary" size="small" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;">返回</mt-button>
+      <mt-button icon="back" type="primary" size="small" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;padding-top: 5px;">返回</mt-button>
       <mt-search v-model="searchText" class="header-search"></mt-search>
     </div>
     <mt-loadmore class="primary" :top-method="loadTop" ref="loadmore" :maxDistance="90"
@@ -43,9 +43,6 @@
         editPanelFlag: false
       };
     },
-    mounted: {
-
-    },
     methods: {
       closePanel () {
         this.$emit('closeCaseListPanel');
@@ -86,6 +83,9 @@
         .mint-searchbar {
           background-color: #26a2ff;
           padding: 0;
+          .mint-searchbar-inner {
+            padding: 6px 6px 2px;
+          }
           .mint-searchbar-cancel {
             color: #ffffff;
           }
