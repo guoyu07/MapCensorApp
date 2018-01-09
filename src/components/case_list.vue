@@ -65,6 +65,7 @@
   import markerBlue from '../assets/marker_blue.png';
   import markerGreen from '../assets/marker_green.png';
   import caseListPanel from './caseListPanel.vue';
+  import { qqMap } from '../qqMap.js';
 
   export default {
     components: {
@@ -94,10 +95,13 @@
       };
     },
     mounted: function () {
-      this.init();
+      let self = this;
+      qqMap(this.app.TX_KEY).then(qq => {
+        self.init(qq);
+      });
     },
     methods: {
-      init () {
+      init (qq) {
         this.centerLatlng = new qq.maps.LatLng(39.914850, 116.403765);
         let mapOptions = {
           zoom: 12,
@@ -112,16 +116,6 @@
           map: this.map
         });
         let self = this;
-        // 添加监听事件
-//        qq.maps.event.addListener(this.map, 'drag', function (event) {
-//          console.log('中心');
-//          if (self.marker) {
-//            self.marker.setPosition(self.map.getCenter());
-//            self.marker.moveTo(self.map.getCenter());
-//          } else {
-//            self.initMarker(self.map.getCenter(), 'red');
-//          }
-//        });
         // 拖动地图
         qq.maps.event.addListener(this.map, 'dragend', function () {
 //          self.initMarker(self.map.getCenter(), 'red');
