@@ -52,7 +52,7 @@
         <div v-on:click="routerTo(2)"><mt-cell title="已审核"></mt-cell></div>
       </mt-popup>
       <!--右侧案例列表-->
-      <mt-popup class="case-list-panel" v-model="caseListPanel" position="right">
+      <mt-popup class="case-list-panel" v-model="caseListPanel" position="right" :modal="false">
         <!--<div v-on:click="showCaseInfo(item)"></div>-->
         <case-list-panel v-bind:case-list="caseList" v-on:closeCaseListPanel="closeCaseListPanel"></case-list-panel>
       </mt-popup>
