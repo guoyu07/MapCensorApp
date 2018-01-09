@@ -17,6 +17,7 @@ import zh from 'vee-validate/dist/locale/zh_CN';  // 引入中文文件
 Vue.use(VueRouter);
 Vue.use(MintUI);
 Vue.use(VeeValidate);
+Vue.prototype.app = Application;
 
 Vue.config.productionTip = false;
 

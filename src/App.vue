@@ -75,7 +75,7 @@ export default {
             this.$router.push({ path: '/index_super' });
             break;
           case 'manager':
-            this.$router.push({ path: '/index_manager' });
+            this.$router.push({ path: '/case_list' });
             break;
           case 'worker':
             this.$router.push({ path: '/index_worker' });
