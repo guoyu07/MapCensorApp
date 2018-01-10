@@ -102,7 +102,14 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // 如果跳转到login，注销token，退出登录
   if (to.path === '/login') {
-    store.commit('SHOW_USER', {});
+    store.commit('SHOW_USER', {
+      username: '',
+      role: ''
+    });
+    // 用户连续刷新界面，触发getter后值未及时更新，此时刷新登录页，手动刷新state状态（暂时处理）
+    if (store.getters.user.username) {
+      router.go(0);
+    }
   }
   if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
     if (store.state.token) {  // 通过vuex state获取当前的token是否存在

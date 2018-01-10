@@ -45,7 +45,6 @@ export default {
     layout () {
       this.$store.dispatch('layout');
       this.$router.push({ path: '/login' });
-      console.log(this.$store.getters);
     },
     // 跳转
     goHistory () {
@@ -74,7 +73,13 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    // 检测user改变
+    user () {
+      console.log(this.$store.getters);
+      return this.$store.getters.user;
+    }
+  },
   store: this.$store
 };
 </script>
