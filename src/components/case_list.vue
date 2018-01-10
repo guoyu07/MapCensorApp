@@ -1,6 +1,6 @@
 <template>
     <div class="caseList" style="width: 100%; height: 100%;">
-      <div id="mapContainer" style="width: 100%; height: 100%;">
+      <div class="map-search-div">
         <i class="fa fa-user menu-left-icon" @click="openMenuBar"></i>
         <mt-search v-model="searchMap" class="map-search-container" placeholder="搜索地点" @keyup.native="autoCompleteList">
           <div v-for="item in searchAuto" v-on:click="searchPoiByTitle(item)" :key="item.id">
@@ -14,11 +14,13 @@
           <i class="fa fa-bars menu-right-icon"></i>
         </div>
       </div>
+      <div id="mapContainer" :class="{'set-map': editStatus, 'show-map': !editStatus}">
+        <div :class="{'center-marker': true, 'bounce': !searchMap && editStatus}" v-if="!searchMap && editStatus"></div>
+      </div>
       <!--创建marker按钮-->
       <div class="map-add-btn" v-on:click="createCase">
         <i class="fa fa-plus"></i>
       </div>
-      <div :class="{'center-marker': true, 'bounce': !searchMap && editStatus}" v-if="!searchMap && editStatus"></div>
       <div :class="{'poi-list-panel': true, 'slideIn': poiListSheet, 'slideOut': !poiListSheet}">
         <div class="poi-list-container">
           <div class="poi-list-item poi-list-now" v-if="handMarkPoi && handMarkPoi.title" @click="selectPoiRow(handMarkPoi)">
@@ -48,8 +50,9 @@
         v-model="tabMenuPanel"
         :class="{'slideInLeft': tabMenuPanel, 'slideOutRight': !tabMenuPanel}"
         position="left">
-        <div v-on:click="routerTo(1)"><mt-cell title="待审核"></mt-cell></div>
-        <div v-on:click="routerTo(2)"><mt-cell title="已审核"></mt-cell></div>
+        <div v-on:click="routerTo('2')"><mt-cell title="待审核"></mt-cell></div>
+        <div v-on:click="routerTo('3,4')"><mt-cell title="已审核"></mt-cell></div>
+        <mt-button size="small" class="tab-menu-bottom" @click="layout" type="danger">退出登录</mt-button>
       </mt-popup>
       <!--右侧案例列表-->
       <mt-popup class="case-list-panel" v-model="caseListPanel" position="right" :modal="false">
@@ -304,7 +307,15 @@
       },
       // 路由跳转待审核已审核
       routerTo (type) {
-        this.$router.push({ path: '/index_manager' });
+        this.$router.push({
+          name: 'managerIndex',
+          params: { type }
+        });
+      },
+      // 退出登录
+      layout () {
+        this.$store.dispatch('layout');
+        this.$router.push({path: '/login'});
       }
     }
   };

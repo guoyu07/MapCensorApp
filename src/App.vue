@@ -1,6 +1,6 @@
 <template>
   <div class="app" id="app">
-		<mt-header :title="user.username?user.username:'审图'" fixed>
+		<mt-header :title="user.username?user.username:'审图'" v-show="$router.history.current.name != 'case_list'" fixed>
       <mt-button icon="back" slot="left" v-if="user.username" @click="goHistory">返回</mt-button>
       <!--<router-link to="/" slot="center" v-if="!user.username">
     		<img src="./assets/logo.png">
@@ -45,52 +45,40 @@ export default {
     layout () {
       this.$store.dispatch('layout');
       this.$router.push({ path: '/login' });
-      console.log(this.$store.getters);
     },
     // 跳转
     goHistory () {
 //      this.$router.back(-1);
       this.$router.goBack();
-      console.log(this.$router);
     }
   },
   // 监听路由的路径，可以通过不同的路径去选择不同的切换效果
   watch: {
     '$route' (to, from) {
       let isBack = this.$router.isBack;  //  监听路由变化时的状态为前进还是后退
+      console.log(this.$router);
       if (isBack) {
         this.transitionName = 'slide-right';
       } else {
         this.transitionName = 'slide-left';
       }
       this.$router.isBack = false;
+    },
+    // username改变跳转index
+    'user.username': {
+      handler: function (val, oldVal) {
+        if (val !== oldVal) {
+          this.$router.push({ path: '/index' });
+        }
+      }
     }
   },
   computed: {
     // 检测user改变
     user () {
-      if (this.$store.getters.user.username) {
-        switch (this.$store.getters.user.role) {
-          case 'superManager':
-            this.$router.push({ path: '/index_super' });
-            break;
-          case 'manager':
-            this.$router.push({ path: '/case_list' });
-            break;
-          case 'worker':
-            this.$router.push({ path: '/index_worker' });
-            break;
-          default:
-            break;
-        }
-      } else {
-        this.$router.push({ path: '/login' });
-      }
+      console.log(this.$store.getters);
       return this.$store.getters.user;
     }
-    // user:function(){
-    //   return store.user.status
-    // }
   },
   store: this.$store
 };

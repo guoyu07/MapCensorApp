@@ -3,7 +3,7 @@
     text-align: left;
   }
 </style>
-<template>
+<template id="selected">
   <div class="page-tabbar" id="index_super">
     <mt-tab-container class="page-tabbar-container" v-model="selected" swipeable>
       <mt-tab-container-item :id="item.id" v-for="item in tabList" :key="item.index">
@@ -213,6 +213,9 @@
       }
     },
     mounted: function () {
+      if (this.$router.currentRoute.params.type) {
+        this.selected = this.$router.currentRoute.params.type;
+      }
       if (this.selected === '-1') {
         this.$router.push({ path: '/case_list' });
         return;

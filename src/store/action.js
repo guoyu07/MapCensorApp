@@ -173,7 +173,10 @@ export default {
   },
   // 退出登录
   layout (context) {
-    context.commit('SHOW_USER', {});
+    context.commit('SHOW_USER', {
+      username: '',
+      role: ''
+    });
   },
   // 查询列表数据
   getUserList (context, obj) {
