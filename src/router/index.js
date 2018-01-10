@@ -2,6 +2,7 @@ import Vue from 'vue';
 import store from './../store'; // import 刚创建的 store
 import VueRouter from 'vue-router';
 
+import Index from '@/components/index';
 import Login from '@/components/login';
 import Register from '@/components/register';
 import IndexSuper from '@/components/index_super';
@@ -26,6 +27,10 @@ const routes = [
     path: '/register',
     component: Register,
     name: 'register'
+  }, {  // 用于跳转，根据角色判断跳转哪个主页面
+    path: '/index',
+    component: Index,
+    name: 'index'
   }, {
     path: '/index_super',
     component: IndexSuper,
@@ -42,6 +47,14 @@ const routes = [
       requireAuth: true
     },
     name: 'index_manager'
+  }, {
+    path: '/index_manager/:type',
+    component: IndexManager,
+    // 需要登录才能进入的页面可以增加一个meta属性
+    meta: {
+      requireAuth: true
+    },
+    name: 'managerIndex'
   }, {
     path: '/index_worker',
     component: IndexWorker,

@@ -9,9 +9,9 @@ export default {
   [SHOW_USER] (state, value) {
     localStorage.setItem('user', JSON.stringify(value));
     console.log('账户：' + value.username, value.password, value.role);
-    state.username = value.username;
-    state.password = value.password;
-    state.role = value.role;
+    state.username = value.username || '';
+    state.password = value.password || '';
+    state.role = value.role || '';
   },
   [GET_LIST] (state, value) {
     localStorage.setItem('list', JSON.stringify(value));
