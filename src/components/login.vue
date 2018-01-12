@@ -19,6 +19,13 @@
     methods: {
       save () {
         let obj = {};
+        if (!this.username || !this.password) {
+          Toast({
+            message: '用户名和密码不能为空!',
+            position: 'bottom'
+          });
+          return;
+        }
         obj.username = this.username || '';
         obj.password = this.password || '';
         this.$store.dispatch('login', obj);
