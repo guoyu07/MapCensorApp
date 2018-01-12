@@ -1,7 +1,7 @@
 {
-  "name": "my-project",
+  "name": "MapCensorApp",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "MapCensor App",
   "author": "wangmingdong <wangmingdong@navinfo.com>",
   "private": true,
   "scripts": {

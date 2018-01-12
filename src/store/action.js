@@ -62,13 +62,6 @@ let mapAxiosGet = function (url, param, suc) {
 export default {
   // 登录
   login (context, obj) {
-    if (!obj.username || !obj.password) {
-      Toast({
-        message: '用户名和密码不能为空!',
-        position: 'bottom'
-      });
-      return;
-    }
     axiosPost('/om/user/login', {
       userName: obj.username,
       password: obj.password
