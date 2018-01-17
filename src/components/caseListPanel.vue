@@ -15,7 +15,7 @@
         </li>
         <li v-for="(item, index) in filterdCaseList" :key="item.id" v-on:click="showCaseInfo(item)">
           <div class="seq"><span>{{index + 1}}</span></div>
-          <div class="description"><span>{{item.caseDesc}}</span></div>
+          <div class="description"><span>{{item.caseSnap}}</span></div>
           <div class="enclosure"><span>{{item.mediaLength}}</span></div>
           <div class="time"><span>{{item.createdAt}}</span></div>
           <div style="padding-left: 2%"><span>&gt;</span></div>
