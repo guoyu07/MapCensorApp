@@ -135,6 +135,14 @@
         });
         this.queryCaseList();
       },
+      // 查询单个案例详情
+      queryCaseInfo (marker) {
+        let self = this;
+        marker.data.callback = function (data) {
+          self.$router.push('/caseEdit');
+        };
+        this.$store.dispatch('queryCaseInfo', marker.data);
+      },
       // 查询案例列表
       queryCaseList () {
         let self = this;
@@ -147,6 +155,15 @@
               for (let i = 0; i < self.caseList.length; i++) {
                 let latLng = new qq.maps.LatLng(self.caseList[i].marker.coordinates[1], self.caseList[i].marker.coordinates[0]);
                 self.createMarker(latLng, 'blue');
+                self.caseMarkers[i].data = {
+                  id: self.caseList[i].id
+                };
+              }
+              // 蓝色marker（案例列表）绑定click事件
+              for (let i = 0; i < self.caseMarkers.length; i++) {
+                qq.maps.event.addListener(self.caseMarkers[i], 'click', function () {
+                  self.queryCaseInfo(self.caseMarkers[i]);
+                });
               }
             }
           }
