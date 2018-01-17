@@ -9,6 +9,7 @@ import IndexSuper from '@/components/index_super';
 import IndexManager from '@/components/index_manager';
 import IndexWorker from '@/components/index_worker';
 import CaseList from '@/components/case_list';
+import CaseEdit from '@/components/caseEditPanel';
 import CensorDlg from '@/components/censorDlg';
 
 Vue.use(VueRouter);
@@ -70,13 +71,14 @@ const routes = [
     meta: {
       requireAuth: true
     },
-    children: [
-      {
-        path: 'censor',
-        component: CensorDlg
-      }
-    ],
     name: 'case_list'
+  }, {
+    path: '/caseEdit',
+    component: CaseEdit,
+    meta: {
+      requireAuth: true
+    },
+    name: 'caseEdit'
   }, {
     path: '*',
     component: Login,

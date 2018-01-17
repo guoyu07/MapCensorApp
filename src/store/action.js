@@ -398,6 +398,37 @@ export default {
       }
     });
   },
+  // 创建案例
+  createCase (context, obj) {
+    axiosPost('/bs/case/create', {
+      caseSnap: obj.caseSnap,
+      caseDesc: obj.caseDesc, // 案例描述
+      caseMethod: obj.caseMethod, // 处理方法
+      images: obj.images, // 图片
+      videos: obj.videos, // 视频
+      marker: obj.marker // 点位
+    }, res => {
+      if (res.data.errorCode > -1) {
+        let newCase = res.data.result.data;
+        // 创建成功后创建form初始化
+        context.commit('SET_CASE', {
+          caseSnap: '', // 案例概述
+          caseDesc: '', // 案例描述
+          caseMethod: '', // 处理方法
+          images: [], // 图片
+          videos: [], // 视频
+          marker: null // 点位
+        });
+        if (obj.callback) {
+          obj.callback(newCase);
+        }
+      }
+      Toast({
+        message: res.data.message,
+        position: 'bottom'
+      });
+    });
+  },
   /**
    * **************************** 腾讯地图服务 *********************************
    */
