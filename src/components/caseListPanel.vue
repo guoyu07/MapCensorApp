@@ -13,9 +13,9 @@
           <div class="enclosure"><span>附件数</span></div>
           <div class="time"><span>创建时间</span></div>
         </li>
-        <li v-for="(item, index) in filterdCaseList" :key="item.id">
+        <li v-for="(item, index) in filterdCaseList" :key="item.id" v-on:click="showCaseInfo(item)">
           <div class="seq"><span>{{index + 1}}</span></div>
-          <div class="description"><span>{{item.caseDesc}}</span></div>
+          <div class="description"><span>{{item.caseSnap}}</span></div>
           <div class="enclosure"><span>{{item.mediaLength}}</span></div>
           <div class="time"><span>{{item.createdAt}}</span></div>
           <div style="padding-left: 2%"><span>&gt;</span></div>
@@ -44,6 +44,13 @@
       };
     },
     methods: {
+      showCaseInfo (caseInfo) {
+        let self = this;
+        caseInfo.callback = function (data) {
+          self.$router.push('/caseEdit');
+        };
+        this.$store.dispatch('queryCaseInfo', caseInfo);
+      },
       closePanel () {
         this.$emit('closeCaseListPanel');
       },

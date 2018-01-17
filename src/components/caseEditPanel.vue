@@ -7,7 +7,7 @@
       </div>
       <div class="bottom-option">
         <mt-button class="list-btn danger" v-if="caseInfo.id" @click.native="doDelete">删除</mt-button>
-        <mt-button class="list-btn danger" v-if="!caseInfo.id" @click.native="doCancel">取消</mt-button>
+        <mt-button class="list-btn" v-if="!caseInfo.id" @click.native="doCancel">取消</mt-button>
         <mt-button class="list-btn primary" @click.native="doSave">保存</mt-button>
       </div>
     </div>
