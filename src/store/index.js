@@ -15,6 +15,15 @@ const state = {
   strLength: '',
   timeLine: '',
   projectList: [],
+  map: null,
+  caseInfo: {
+    caseSnap: '', // 案例概述
+    caseDesc: '', // 案例描述
+    caseMethod: '', // 处理方法
+    images: [], // 图片
+    videos: [], // 视频
+    marker: null // 点位
+  }, // 新建案例
   token: ''
 };
 // 整合初始状态和变更函数，我们就得到了我们所需的 store

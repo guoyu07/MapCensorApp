@@ -11,5 +11,12 @@ export default {
     let list = JSON.parse(localStorage.getItem('list'));
     state = Object.assign({}, state, list);
     return state;
+  },
+  caseInfo: (state) => {
+    return state.caseInfo;
+  },
+  // 地图相关
+  map: (state) => {
+    return state.map;
   }
 };

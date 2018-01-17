@@ -60,7 +60,7 @@
         <case-list-panel v-bind:case-list="caseList" v-on:closeCaseListPanel="closeCaseListPanel"></case-list-panel>
       </mt-popup>
       <!--子路由，匹配审核面板-->
-      <router-view></router-view>
+      <!--<router-view></router-view>-->
     </div>
 </template>
 <script>
@@ -105,13 +105,20 @@
     },
     methods: {
       init (qq) {
-        this.centerLatlng = new qq.maps.LatLng(39.914850, 116.403765);
+        let storeMap = this.$store.getters.map;
+        if (!storeMap) {
+          this.centerLatlng = new qq.maps.LatLng(39.916527, 116.397128);
+        } else {
+          let centerGeo = storeMap.getCenter();
+          this.centerLatlng = new qq.maps.LatLng(centerGeo.lat, centerGeo.lng);
+        }
         let mapOptions = {
           zoom: 12,
           center: this.centerLatlng,
           mapTypeId: qq.maps.MapTypeId.ROADMAP
         };
         this.map = new qq.maps.Map(document.getElementById('mapContainer'), mapOptions);
+        this.$store.commit('SET_MAP', this.map);
         // 比例尺
         this.scaleControl = new qq.maps.ScaleControl({
           align: qq.maps.ALIGN.BOTTOM_right,
@@ -122,7 +129,6 @@
         // 拖动地图
         qq.maps.event.addListener(this.map, 'dragend', function () {
 //          self.initMarker(self.map.getCenter(), 'red');
-          console.log(self.map.getCenter().lat);
           self.centerLatlng = self.map.getCenter();
           self.map.setCenter(self.map.getCenter());
           self.getPoiByGeo();
@@ -244,7 +250,13 @@
       // 确定
       doSavePoi () {
         this.poiListSheet = false;
-        this.$router.push('/case_list/censor');
+        this.$store.commit('SET_CASE', {
+          marker: {
+            type: 'Point',
+            coordinates: [this.selectPoi.location.lng, this.selectPoi.location.lat]
+          }
+        });
+        this.$router.push('/caseEdit');
         console.log(this.selectPoi);
       },
       // 选中底部列表中一条poi
