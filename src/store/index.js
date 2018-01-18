@@ -16,6 +16,8 @@ const state = {
   timeLine: '',
   projectList: [],
   map: null,
+  caseList: [],
+  casePageNum: 1,
   caseInfo: {
     caseSnap: '', // 案例概述
     caseDesc: '', // 案例描述

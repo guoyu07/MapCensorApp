@@ -55,7 +55,7 @@
         <mt-button size="small" class="tab-menu-bottom" @click="layout" type="danger">退出登录</mt-button>
       </mt-popup>
       <!--右侧案例列表-->
-      <mt-popup class="case-list-panel" v-model="caseListPanel" position="right" :modal="false">
+      <mt-popup class="case-list-panel" v-if="caseListPanel" v-model="caseListPanel" position="right" :modal="false">
         <!--<div v-on:click="showCaseInfo(item)"></div>-->
         <case-list-panel v-bind:case-list="caseList" v-on:closeCaseListPanel="closeCaseListPanel"></case-list-panel>
       </mt-popup>
@@ -69,6 +69,7 @@
   import markerGreen from '../assets/marker_green.png';
   import caseListPanel from './caseListPanel.vue';
   import { qqMap } from '../qqMap.js';
+  import {mapGetters, mapState} from 'vuex';
 
   export default {
     components: {
@@ -88,9 +89,9 @@
         selectPoi: null,  // 所选poi
         handMarkPoi: null, // 手动打点
         caseListPanel: false,  // 案例列表面板
-        caseList: [],
-        casePageNum: 10,
-        casePageSize: 1,  // 案例列表每页显示个数
+//        caseList: [],
+        casePageSize: 10,
+        casePageNum: 1,  // 案例列表每页显示个数
         tabMenuPanel: false,  // 左侧面板
         caseMarkers: [], // 地图上案例marker
         editStatus: false, // 编辑状态 false：查看 true：新建
@@ -138,40 +139,45 @@
       // 查询单个案例详情
       queryCaseInfo (marker) {
         let self = this;
-        marker.data.callback = function (data) {
+        marker.callback = function (data) {
           self.$router.push('/caseEdit');
         };
-        this.$store.dispatch('queryCaseInfo', marker.data);
+        this.$store.dispatch('queryCaseInfo', marker);
+      },
+      // 创建案例的marker
+      createCaseMarker () {
+        let self = this;
+        if (this.caseList.length) {
+          for (let i = 0; i < this.caseList.length; i++) {
+            let latLng = new qq.maps.LatLng(this.caseList[i].marker.coordinates[1], this.caseList[i].marker.coordinates[0]);
+            this.createMarker(latLng, 'blue', this.caseList[i]);
+          }
+          // 蓝色marker（案例列表）绑定click事件
+          for (let i = 0; i < this.caseMarkers.length; i++) {
+            let marker = self.caseMarkers[i];
+            qq.maps.event.addListener(marker, 'click', function (data) {
+              self.queryCaseInfo(data.target);
+            });
+          }
+        }
       },
       // 查询案例列表
       queryCaseList () {
         let self = this;
         let param = {
-          pageSize: this.casePageNum,
-          pageNum: this.casePageSize,
+          pageSize: this.casePageSize,
+          pageNum: this.casePageNum,
+          type: 0,
           callback: data => {
-            self.caseList = data.data;
-            if (self.caseList.length) {
-              for (let i = 0; i < self.caseList.length; i++) {
-                let latLng = new qq.maps.LatLng(self.caseList[i].marker.coordinates[1], self.caseList[i].marker.coordinates[0]);
-                self.createMarker(latLng, 'blue');
-                self.caseMarkers[i].data = {
-                  id: self.caseList[i].id
-                };
-              }
-              // 蓝色marker（案例列表）绑定click事件
-              for (let i = 0; i < self.caseMarkers.length; i++) {
-                qq.maps.event.addListener(self.caseMarkers[i], 'click', function () {
-                  self.queryCaseInfo(self.caseMarkers[i]);
-                });
-              }
-            }
+//            self.caseList = data.data;
+//            self.$store.commit('GET_CASE_LIST', self.caseList);
+            self.createCaseMarker();
           }
         };
         this.$store.dispatch('getCaseList', param);
       },
       // 初始化marker
-      createMarker (latLng, type) {
+      createMarker (latLng, type, caseInfo) {
         let markerLatLng = new qq.maps.LatLng(latLng.getLat(), latLng.getLng());
         let markerType;
         if (type === 'red') {
@@ -189,7 +195,8 @@
           // 设置Marker不可拖动
           draggable: false,
           // 自定义Marker图标为大头针样式
-          icon: new qq.maps.MarkerImage(markerType)
+          icon: new qq.maps.MarkerImage(markerType),
+          id: caseInfo.id // 案例id
         }));
       },
       // 创建marker
@@ -345,6 +352,20 @@
       layout () {
         this.$store.dispatch('layout');
         this.$router.push({path: '/login'});
+      }
+    },
+    computed: {
+      ...mapGetters([
+        'caseList'
+      ])
+    },
+    watch: {
+      // tab切换触发查询
+      caseList (value, oldVal) {
+        console.log(value, oldVal);
+//        this.caseList = value;
+        this.createCaseMarker();
+        return this.$store.getters.user.caseList;
       }
     }
   };

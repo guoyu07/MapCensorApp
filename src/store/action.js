@@ -392,6 +392,16 @@ export default {
       pageNum: obj.pageNum
     }, res => {
       if (res.data.errorCode > -1) {
+        // 加载更多
+        if (obj.type) {
+          context.commit('GET_CASE_MORE', {
+            caseList: res.data.result.data
+          });
+        } else {  // 刷新列表
+          context.commit('GET_CASE_LIST', {
+            caseList: res.data.result.data
+          });
+        }
         if (obj.callback) {
           obj.callback(res.data.result);
         }
