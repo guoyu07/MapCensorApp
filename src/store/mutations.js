@@ -37,7 +37,12 @@ export default {
     state.token = value;
   },
   [SET_CASE] (state, value) {
-    state.caseInfo = Object.assign({}, state.caseInfo, value);
+    if (!value.id && value.marker) {
+      // 新建
+      state.caseInfo = value;
+    } else {
+      state.caseInfo = Object.assign({}, state.caseInfo, value);
+    }
   },
   [SET_MAP] (state, value) {
     state.map = value;
