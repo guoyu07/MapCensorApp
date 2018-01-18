@@ -90,7 +90,7 @@
         handMarkPoi: null, // 手动打点
         caseListPanel: false,  // 案例列表面板
 //        caseList: [],
-        casePageSize: 10,
+        casePageSize: 20,
         casePageNum: 1,  // 案例列表每页显示个数
         tabMenuPanel: false,  // 左侧面板
         caseMarkers: [], // 地图上案例marker

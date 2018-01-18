@@ -43,7 +43,7 @@
         searchText: '',
         editPanelFlag: false,
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         infiniteLoadingFlag: false,
         topStatus: '',
         loading: false
