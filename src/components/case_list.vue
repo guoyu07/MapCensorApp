@@ -165,8 +165,9 @@
       queryCaseList () {
         let self = this;
         let param = {
-          pageSize: this.casePageSize,
-          pageNum: this.casePageNum,
+          // 默认全部加载
+//          pageSize: this.casePageSize,
+//          pageNum: this.casePageNum,
           type: 0,
           callback: data => {
 //            self.caseList = data.data;
