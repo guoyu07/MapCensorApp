@@ -1,10 +1,10 @@
 <template>
-  <div class="list-panel">
+  <div class="list-panel" style="height: 100%;overflow: auto;position: absolute;">
     <div class="panel-header">
       <mt-button icon="back" type="primary" size="small" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;padding-top: 5px;">返回</mt-button>
       <mt-search v-model="searchText" class="header-search"></mt-search>
     </div>
-    <mt-loadmore class="primary" :top-method="loadTop" ref="loadmore" :maxDistance="90"
+    <mt-loadmore class="primary" :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore"
                  v-infinite-scroll="infiniteLoad" infinite-scroll-disabled="infiniteLoadingFlag" infinite-scroll-distance="10">
       <ul class="cs-ul">
         <li>
@@ -18,10 +18,11 @@
           <div class="description"><span>{{item.caseSnap}}</span></div>
           <div class="enclosure"><span>{{item.mediaLength}}</span></div>
           <div class="time"><span>{{item.createdAt}}</span></div>
-          <div style="padding-left: 2%"><span>&gt;</span></div>
+          <div style="padding-left: 2%"><i class="fa fa-angle-right "></i></div>
         </li>
       </ul>
     </mt-loadmore>
+    <mt-spinner class="load-more-gif" type="triple-bounce" v-show="loading" color="#26a2ff"></mt-spinner>
     <mt-popup v-model="editPanelFlag" position="bottom" :modal="false">
       <case-edit-panel></case-edit-panel>
     </mt-popup>
@@ -33,14 +34,19 @@
 
   export default {
     name: 'caseListPanel',
-    props: ['caseList'],
+//    props: ['caseList'],
     components: {
       caseEditPanel
     },
     data: function () {
       return {
         searchText: '',
-        editPanelFlag: false
+        editPanelFlag: false,
+        pageNum: 1,
+        pageSize: 10,
+        infiniteLoadingFlag: false,
+        topStatus: '',
+        loading: false
       };
     },
     methods: {
@@ -55,14 +61,46 @@
         this.$emit('closeCaseListPanel');
       },
       loadTop () {
-        console.log('load top ...');
-        this.$refs.loadmore.onTopLoaded();
+        this.pageNum = 1;
+        this.getCaseList();
       },
       infiniteLoad () {
-
+        // 数据未满20*?，不用加载更多
+        if (this.caseList.length < this.pageNum * this.pageSize) {
+          return;
+        }
+        this.loading = true;
+        this.pageNum++;
+        this.getCaseList(1);
+      },
+      // 查询列表
+      getCaseList (type) {
+        let obj = {};
+        let self = this;
+        obj.pageNum = this.pageNum;
+        obj.pageSize = this.pageSize;
+        obj.type = type;  // 0 刷新 1加载更多
+        obj.callback = function () {
+          self.topStatus = '';
+          self.$refs.loadmore.onTopLoaded();
+          self.loading = false;
+        };
+        this.$store.dispatch('getCaseList', obj);
       }
     },
+    watch: {
+//      casePageNum (value, oldValue) {
+//        this.casePageNum = value;
+//        getCaseList(0);
+//      }
+    },
     computed: {
+      caseList () {
+        return this.$store.getters.caseList;
+      },
+      casePageNum () {
+        return this.$store.getters.casePageNum;
+      },
       filterdCaseList () {
         return this.caseList.filter((item) => {
           return item.caseDesc.indexOf(this.searchText) !== -1;
@@ -98,6 +136,10 @@
           }
         }
       }
+    }
+    .load-more-gif {
+      width: 100%;
+      text-align: center;
     }
     .primary {
       padding: 0 10px;

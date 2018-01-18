@@ -12,9 +12,15 @@ export default {
     state = Object.assign({}, state, list);
     return state;
   },
+  caseList: (state) => {
+    return state.caseList;
+  },
   caseInfo: (state) => {
     return state.caseInfo;
   },
+  // casePageNum: (state) => {
+  //   return state.casePageNum;
+  // },
   // 地图相关
   map: (state) => {
     return state.map;

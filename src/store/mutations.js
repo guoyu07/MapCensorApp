@@ -3,8 +3,11 @@ const GET_LIST = 'GET_LIST';  // 请求列表数据
 const GET_LIST_MORE = 'GET_LIST_MORE';  // 请求更多数据
 const GET_PROJECT_LIST = 'GET_PROJECT_LIST';  // 请求项目列表数据
 const GET_PROJECT_MORE = 'GET_PROJECT_MORE';  // 请求更多项目数据
+const GET_CASE_LIST = 'GET_CASE_LIST';  // 请求案例列表数据
+const GET_CASE_MORE = 'GET_CASE_MORE';  // 请求案例项目数据
 const SET_TOKEN = 'SET_TOKEN';  // 赋值token
 const SET_CASE = 'SET_CASE';  // 新案例赋值
+// const SET_CASE_NUM = 'SET_CASE_NUM';  // 案例查询页码
 const SET_MAP = 'SET_MAP';  // 设置地图属性
 
 export default {
@@ -33,6 +36,12 @@ export default {
     state.list = state.list.concat(value.projectList);
     state.timeLine = value.timeLine;
   },
+  [GET_CASE_LIST] (state, value) {
+    state.caseList = value.caseList;
+  },
+  [GET_CASE_MORE] (state, value) {
+    state.caseList = state.caseList.concat(value.caseList);
+  },
   [SET_TOKEN] (state, value) {
     state.token = value;
   },
@@ -44,6 +53,9 @@ export default {
       state.caseInfo = Object.assign({}, state.caseInfo, value);
     }
   },
+  // [SET_CASE_NUM] (state, value) {
+  //   state.casePageNum = value;
+  // },
   [SET_MAP] (state, value) {
     state.map = value;
   }
