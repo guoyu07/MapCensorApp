@@ -60,25 +60,25 @@
       closePanel () {
         this.$emit('closeCaseListPanel');
       },
-      loadTop () {
-        this.pageNum = 1;
-        this.getCaseList();
-      },
-      infiniteLoad () {
-        // 数据未满20*?，不用加载更多
-        if (this.caseList.length < this.pageNum * this.pageSize) {
-          return;
-        }
-        this.loading = true;
-        this.pageNum++;
-        this.getCaseList(1);
-      },
+//      loadTop () {
+//        this.pageNum = 1;
+//        this.getCaseList();
+//      },
+//      infiniteLoad () {
+//        // 数据未满20*?，不用加载更多
+//        if (this.caseList.length < this.pageNum * this.pageSize) {
+//          return;
+//        }
+//        this.loading = true;
+//        this.pageNum++;
+//        this.getCaseList(1);
+//      },
       // 查询列表
       getCaseList (type) {
         let obj = {};
         let self = this;
-        obj.pageNum = this.pageNum;
-        obj.pageSize = this.pageSize;
+//        obj.pageNum = this.pageNum;
+//        obj.pageSize = this.pageSize;
         obj.type = type;  // 0 刷新 1加载更多
         obj.callback = function () {
           self.topStatus = '';
