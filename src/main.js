@@ -13,10 +13,12 @@ import 'mint-ui/lib/style.css';
 import 'font-awesome/css/font-awesome.min.css';
 import VeeValidate from 'vee-validate';
 import zh from 'vee-validate/dist/locale/zh_CN';  // 引入中文文件
+import Viewer from 'v-viewer';  // 照片查看器
 
 Vue.use(VueRouter);
 Vue.use(MintUI);
 Vue.use(VeeValidate);
+Vue.use(Viewer);
 Vue.prototype.app = Application;
 
 Vue.config.productionTip = false;
