@@ -49,6 +49,7 @@ export default {
   [SET_CASE] (state, value) {
     if (!value.id && value.marker) {
       // 新建
+      value.images = [];
       state.caseInfo = value;
     } else {
       state.caseInfo = Object.assign({}, state.caseInfo, value);
