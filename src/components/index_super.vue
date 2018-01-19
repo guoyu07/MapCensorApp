@@ -153,7 +153,7 @@ export default {
         title: '注册账号审核',
         message: `<div class="mint-radiolist">
            <div class="">设置角色</div>
-           <div style="display: flex">
+           <div>
             <a class="mint-cell">
               <div class="mint-cell-wrapper">
                 <div class="mint-cell-title">
