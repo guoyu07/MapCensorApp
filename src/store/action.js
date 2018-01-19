@@ -410,6 +410,11 @@ export default {
   },
   // 创建案例
   createCase (context, obj) {
+    if (obj.images.length) {
+      for (let i = 0; i < obj.images.length; i++) {
+        obj.images[i] = obj.images[i].replace(Application.SERVICE, '');
+      }
+    }
     axiosPost('/bs/case/create', {
       caseSnap: obj.caseSnap,
       caseDesc: obj.caseDesc, // 案例描述
