@@ -4,8 +4,7 @@
       <mt-button icon="back" type="primary" size="small" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;padding-top: 5px;">返回</mt-button>
       <mt-search v-model="searchText" class="header-search"></mt-search>
     </div>
-    <mt-loadmore class="primary" :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore"
-                 v-infinite-scroll="infiniteLoad" infinite-scroll-disabled="infiniteLoadingFlag" infinite-scroll-distance="10">
+    <mt-loadmore class="primary">
       <ul class="cs-ul">
         <li>
           <div class="seq"><span>序号</span></div>
@@ -97,9 +96,6 @@
     computed: {
       caseList () {
         return this.$store.getters.caseList;
-      },
-      casePageNum () {
-        return this.$store.getters.casePageNum;
       },
       filterdCaseList () {
         return this.caseList.filter((item) => {

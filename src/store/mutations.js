@@ -1,3 +1,4 @@
+import Application from './../application.js';
 const SHOW_USER = 'SHOW_USER';  // 记录登录账户
 const GET_LIST = 'GET_LIST';  // 请求列表数据
 const GET_LIST_MORE = 'GET_LIST_MORE';  // 请求更多数据
@@ -51,6 +52,13 @@ export default {
       state.caseInfo = value;
     } else {
       state.caseInfo = Object.assign({}, state.caseInfo, value);
+      let fmtImages = [];
+      if (state.caseInfo.images.length) {
+        for (let i = 0; i < state.caseInfo.images.length; i++) {
+          fmtImages.push(Application.SERVICE + state.caseInfo.images[i]);
+        }
+        state.caseInfo.images = fmtImages;
+      }
     }
   },
   // [SET_CASE_NUM] (state, value) {

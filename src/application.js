@@ -1,5 +1,6 @@
 const App = {
   SERVICE_URL: 'http://192.168.4.189:3000/api',
+  SERVICE: 'http://192.168.4.189:3000/',
   MAP_SERVICE_URL: 'http://apis.map.qq.com',
   TX_KEY: 'SBHBZ-TH4W3-HSD32-YI3M6-OB7A6-L7FKO',  // 腾讯地图key
   TOKEN: localStorage.getItem('token'),

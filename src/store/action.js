@@ -441,6 +441,11 @@ export default {
   },
   // 修改案例
   updateCase (context, obj) {
+    if (obj.images.length) {
+      for (let i = 0; i < obj.images.length; i++) {
+        obj.images[i] = obj.images[i].replace(Application.SERVICE, '');
+      }
+    }
     axiosPost('/bs/case/update', {
       id: obj.id,
       caseSnap: obj.caseSnap,

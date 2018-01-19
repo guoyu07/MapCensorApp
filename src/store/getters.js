@@ -1,3 +1,4 @@
+import Application from './../application.js';
 export default {
   user: (state) => {
     let user = JSON.parse(localStorage.getItem('user'));
@@ -16,6 +17,13 @@ export default {
     return state.caseList;
   },
   caseInfo: (state) => {
+    // let fmtImages = [];
+    // if (state.caseInfo.images.length) {
+    //   for (let i = 0; i < state.caseInfo.images.length; i++) {
+    //     fmtImages.push(Application.SERVICE + state.caseInfo.images[i]);
+    //   }
+    //   state.caseInfo.images = fmtImages;
+    // }
     return state.caseInfo;
   },
   // casePageNum: (state) => {
