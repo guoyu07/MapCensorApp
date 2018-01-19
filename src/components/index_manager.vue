@@ -13,7 +13,7 @@
           <div v-on:click="popupInfo(pro)"  v-for="pro in list.list" :key="pro.id">
             <mt-cell class="user-list-cell" :title="pro.projectName" :label="pro.projectDesc" is-link>
               <div v-if="selected === '2'">
-                <div style="display: inline-block;">{{((pro.audited + pro.errorCount)/(pro.issueTotal)) * 100}}%</div>
+                <div style="display: inline-block;">{{((pro.audited + pro.errorCount)/(pro.issueTotal)).toFixed(2) * 100}}%</div>
                 <mt-button type="primary" size="small" @click="doSubmitInit(pro, 3, $event)">通过</mt-button>
                 <mt-button type="danger" size="small" @click="doSubmitInit(pro, 4, $event)">不通过</mt-button>
               </div>
@@ -54,8 +54,8 @@
         <mt-cell title="进度">
         </mt-cell>
         <div style="padding: 0 10px;">
-          <mt-progress :value="((selectProject.audited + selectProject.errorCount)/(selectProject.issueTotal)) * 100">
-            <div slot="start">{{((selectProject.audited + selectProject.errorCount)/(selectProject.issueTotal)) * 100}}%</div>
+          <mt-progress :value="((selectProject.audited + selectProject.errorCount)/(selectProject.issueTotal)).toFixed(2) * 100">
+            <div slot="start">{{((selectProject.audited + selectProject.errorCount)/(selectProject.issueTotal)).toFixed(2) * 100}}%</div>
             <div slot="end">100%</div>
           </mt-progress>
         </div>
