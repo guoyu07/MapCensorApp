@@ -18,6 +18,7 @@ const state = {
   map: null,
   caseList: [],
   casePageNum: 1,
+  selectProject: null,  // 选择的项目
   caseInfo: {
     caseSnap: '', // 案例概述
     caseDesc: '', // 案例描述

@@ -408,6 +408,30 @@ export default {
       }
     });
   },
+  // 用户查询
+  getListDetail (context, obj) {
+    axiosGet('/bs/case/listDetail', {
+      projectCode: obj.projectCode,
+      pageSize: obj.pageSize,
+      pageNum: obj.pageNum
+    }, res => {
+      if (res.data.errorCode > -1) {
+        // 加载更多
+        if (obj.type) {
+          context.commit('GET_CASE_MORE', {
+            caseList: res.data.result.data
+          });
+        } else {  // 刷新列表
+          context.commit('GET_CASE_LIST', {
+            caseList: res.data.result.data
+          });
+        }
+        if (obj.callback) {
+          obj.callback(res.data.result);
+        }
+      }
+    });
+  },
   // 创建案例
   createCase (context, obj) {
     if (obj.images.length) {
@@ -494,7 +518,6 @@ export default {
       id: obj.id
     }, res => {
       if (res.data.errorCode > -1) {
-        console.log(res.data.result);
         context.commit('SET_CASE', res.data.result.data);
         if (obj.callback) {
           obj.callback(res.data.result);

@@ -9,6 +9,7 @@ import IndexSuper from '@/components/index_super';
 import IndexManager from '@/components/index_manager';
 import IndexWorker from '@/components/index_worker';
 import CaseList from '@/components/case_list';
+import CaseListForPro from '@/components/caseListForPro';
 import CaseEdit from '@/components/caseEditPanel';
 import CensorDlg from '@/components/censorDlg';
 
@@ -72,6 +73,13 @@ const routes = [
       requireAuth: true
     },
     name: 'case_list'
+  }, {
+    path: '/caseListForPro',
+    component: CaseListForPro,
+    meta: {
+      requireAuth: true
+    },
+    name: 'caseListForPro'
   }, {
     path: '/caseEdit',
     component: CaseEdit,

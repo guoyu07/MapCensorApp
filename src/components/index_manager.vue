@@ -59,6 +59,7 @@
             <div slot="end">100%</div>
           </mt-progress>
         </div>
+        <mt-button type="default" style="width: 100%; border-radius: 0;" @click.native="showCaseList">查看案例</mt-button>
       </div>
     </mt-popup>
     <mt-popup class="popup-model" position="right" v-if="selected == '3,4'" popup-transition="popup-fade" v-model="showInfo" modal="true">
@@ -126,10 +127,22 @@
         };
         this.$store.dispatch('getProjectList', obj);
       },
+      // 查看案例列表
+      showCaseList () {
+        let self = this;
+        let param = {
+          projectCode: this.selectProject.id,
+          callback: function () {
+            self.$router.push('/caseListForPro');
+          }
+        };
+        this.$store.dispatch('getListDetail', param);
+      },
       // 详情
       popupInfo (project) {
         if (project) {
           this.selectProject = project;
+          this.$store.commit('SET_PROJECT', project);
         }
         this.showInfo = !this.showInfo;
       },

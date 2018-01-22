@@ -8,6 +8,7 @@ const GET_CASE_LIST = 'GET_CASE_LIST';  // 请求案例列表数据
 const GET_CASE_MORE = 'GET_CASE_MORE';  // 请求案例项目数据
 const SET_TOKEN = 'SET_TOKEN';  // 赋值token
 const SET_CASE = 'SET_CASE';  // 新案例赋值
+const SET_PROJECT = 'SET_PROJECT';  // 选择项目
 // const SET_CASE_NUM = 'SET_CASE_NUM';  // 案例查询页码
 const SET_MAP = 'SET_MAP';  // 设置地图属性
 
@@ -61,6 +62,9 @@ export default {
         state.caseInfo.images = fmtImages;
       }
     }
+  },
+  [SET_PROJECT] (state, value) {
+    state.selectProject = value;
   },
   // [SET_CASE_NUM] (state, value) {
   //   state.casePageNum = value;
