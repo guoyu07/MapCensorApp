@@ -563,6 +563,23 @@ export default {
       }
     });
   },
+  // 审核问题
+  auditIssue (context, obj) {
+    axiosPost('/bs/issue/auditIssue', {
+      issueStatus: obj.issueStatus,
+      issueId: obj.issueId
+    }, res => {
+      if (res.data.errorCode > -1) {
+        if (obj.callback) {
+          obj.callback();
+        }
+      }
+      Toast({
+        message: res.data.message,
+        position: 'bottom'
+      });
+    });
+  },
   /**
    * **************************** 腾讯地图服务 *********************************
    */

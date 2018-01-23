@@ -17,8 +17,8 @@
           <case-info-model></case-info-model>
         </div>
         <div class="case-info-btn-group">
-          <mt-button class="case-info-btn danger" @click.native="doPassCase(0)">不通过</mt-button>
-          <mt-button class="case-info-btn primary" @click.native="doPassCase(1)">通过</mt-button>
+          <mt-button class="case-info-btn danger" @click.native="doPassCase(2)" :disabled="issueInfo.issueStatus == 2">不通过</mt-button>
+          <mt-button class="case-info-btn primary" @click.native="doPassCase(1)" :disabled="issueInfo.issueStatus == 1">通过</mt-button>
         </div>
       </div>
       <!--左侧tab列表-->
@@ -206,17 +206,22 @@
       },
       // 通过/不通过
       doPassCase (type) {
-//        this.caseInfoSheet = false;
-//        this.$store.commit('SET_CASE', {
-//          marker: {
-//            type: 'Point',
-//            coordinates: [this.selectPoi.location.lng, this.selectPoi.location.lat]
-//          }
-//        });
-//        this.$router.push('/caseEdit');
-        // this.$store.dispatch('checkProject', this.selectProject);
-        if (type) {} else {}
-        console.log(this.caseInfo, this.selectProject);
+        let self = this;
+        if (!this.issueInfo.caseCode) {
+          this.$toast({
+            message: 'caseCode不能为空',
+            position: 'bottom'
+          });
+          return;
+        }
+        let param = {
+          issueId: this.issueInfo.caseCode,
+          callback () {
+            self.issueInfo.issueStatus = type;
+          }
+        };
+        param.issueStatus = type;
+        this.$store.dispatch('auditIssue', param);
       },
       // 路由跳转待审核已审核
       routerTo (type) {
@@ -233,7 +238,7 @@
     },
     computed: {
       ...mapGetters([
-        'caseList', 'selectProject', 'caseInfo'
+        'caseList', 'selectProject', 'caseInfo', 'issueInfo'
       ])
     },
     watch: {
