@@ -9,6 +9,7 @@ const GET_CASE_MORE = 'GET_CASE_MORE';  // 请求案例项目数据
 const SET_TOKEN = 'SET_TOKEN';  // 赋值token
 const SET_CASE = 'SET_CASE';  // 新案例赋值
 const SET_PROJECT = 'SET_PROJECT';  // 选择项目
+const SET_ISSUE = 'SET_ISSUE';  // 选择问题
 // const SET_CASE_NUM = 'SET_CASE_NUM';  // 案例查询页码
 const SET_MAP = 'SET_MAP';  // 设置地图属性
 
@@ -65,6 +66,22 @@ export default {
   },
   [SET_PROJECT] (state, value) {
     state.selectProject = value;
+  },
+  [SET_ISSUE] (state, value) {
+    if (!value.caseCode) {
+      // 新建
+      value.caseImages = [];
+      state.issueInfo = value;
+    } else {
+      state.issueInfo = Object.assign({}, state.issueInfo, value);
+      let fmtImages = [];
+      if (state.issueInfo.caseImages.length) {
+        for (let i = 0; i < state.issueInfo.caseImages.length; i++) {
+          fmtImages.push(Application.SERVICE + state.issueInfo.caseImages[i]);
+        }
+        state.issueInfo.caseImages = fmtImages;
+      }
+    }
   },
   // [SET_CASE_NUM] (state, value) {
   //   state.casePageNum = value;

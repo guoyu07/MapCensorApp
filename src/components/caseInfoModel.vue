@@ -3,35 +3,35 @@
       <div>
         <div class="text-container">
           <div class="text-label">案例编号</div>
-          <div class="text-info">{{caseInfo.id}}</div>
+          <div class="text-info">{{issueInfo.caseCode}}</div>
         </div>
         <div class="text-container">
           <div class="text-label">案例概述</div>
-          <div class="text-info">{{caseInfo.caseSnap}}</div>
+          <div class="text-info">{{issueInfo.caseSnap}}</div>
         </div>
         <div class="text-container">
           <div class="text-label">详细描述</div>
-          <div class="text-info">{{caseInfo.caseDesc}}</div>
+          <div class="text-info">{{issueInfo.caseDesc}}</div>
         </div>
         <div class="text-container">
           <div class="text-label">解决方案</div>
-          <div class="text-info">{{caseInfo.caseMethod}}</div>
+          <div class="text-info">{{issueInfo.caseMethod}}</div>
         </div>
-        <!--<mt-field label="案例编号" placeholder="" type="text" v-model="caseInfo.id"></mt-field>-->
-        <!--<mt-field label="案例概述" placeholder="" type="text" v-model="caseInfo.caseSnap"></mt-field>-->
-        <!--<mt-field label="详细描述" placeholder="" type="text" v-model="caseInfo.caseDesc"></mt-field>-->
-        <!--<mt-field label="解决方案" placeholder="" type="text" v-model="caseInfo.caseMethod"></mt-field>-->
+        <!--<mt-field label="案例编号" placeholder="" type="text" v-model="issueInfo.caseCode"></mt-field>-->
+        <!--<mt-field label="案例概述" placeholder="" type="text" v-model="issueInfo.caseSnap"></mt-field>-->
+        <!--<mt-field label="详细描述" placeholder="" type="text" v-model="issueInfo.caseDesc"></mt-field>-->
+        <!--<mt-field label="解决方案" placeholder="" type="text" v-model="issueInfo.caseMethod"></mt-field>-->
         <div class="img-container">
-          <viewer :images="caseInfo.images" class="images-list">
-            <div class="images-content" v-for="(src, index) in caseInfo.images">
+          <viewer :images="issueInfo.caseImages" class="images-list">
+            <div class="images-content" v-for="(src, index) in issueInfo.caseImages">
               <img :src="src" :key="src">
             </div>
           </viewer>
         </div>
       </div>
       <div class="bottom-option" v-if="!imageSheet">
-        <mt-button class="list-btn danger" v-if="caseInfo.id" @click.native="doDelete">删除</mt-button>
-        <mt-button class="list-btn" v-if="!caseInfo.id" @click.native="doCancel">取消</mt-button>
+        <mt-button class="list-btn danger" v-if="issueInfo.caseCode" @click.native="doDelete">删除</mt-button>
+        <mt-button class="list-btn" v-if="!issueInfo.caseCode" @click.native="doCancel">取消</mt-button>
         <mt-button class="list-btn primary" @click.native="doSave">保存</mt-button>
       </div>
     </div>
@@ -68,11 +68,11 @@
           showCancelButton: true,
           callback (data) {
             if (data === 'confirm') {
-              self.caseInfo.callback = function () {
+              self.issueInfo.callback = function () {
                 self.$router.push('/case_list');
-                self.$store.getters.map.setCenter(new qq.maps.LatLng(self.caseInfo.marker.coordinates[1], self.caseInfo.marker.coordinates[0]));
+                self.$store.getters.map.setCenter(new qq.maps.LatLng(self.issueInfo.caseMarker.coordinates[1], self.issueInfo.caseMarker.coordinates[0]));
               };
-              self.$store.dispatch('deleteCase', self.caseInfo);
+              self.$store.dispatch('deleteCase', self.issueInfo);
             }
           }
         });
@@ -80,32 +80,32 @@
       // 删除图片
       remoteImg (index) {
         console.log(index);
-        this.caseInfo.images.splice(index, 1);
+        this.issueInfo.caseImages.splice(index, 1);
       },
       doSave () {
-        console.log(this.caseInfo);
+        console.log(this.issueInfo);
         let self = this;
-        if (this.caseInfo.id) {
+        if (this.issueInfo.caseCode) {
           // edit
-          this.caseInfo.callback = function () {
+          this.issueInfo.callback = function () {
             self.$router.push('/case_list');
             self.$store.getters.map.setCenter(new qq.maps.LatLng(this.marker.coordinates[1], this.marker.coordinates[0]));
           };
-          this.$store.dispatch('updateCase', this.caseInfo);
+          this.$store.dispatch('updateCase', this.issueInfo);
         } else {
-          this.caseInfo.callback = function (caseRes) {
+          this.issueInfo.callback = function (caseRes) {
             console.log(caseRes.marker);
             self.$router.push('/case_list');
             self.$store.getters.map.setCenter(new qq.maps.LatLng(caseRes.marker.coordinates[1], caseRes.marker.coordinates[0]));
           };
           // create
-          this.$store.dispatch('createCase', this.caseInfo);
+          this.$store.dispatch('createCase', this.issueInfo);
         }
       }
     },
     computed: {
-      caseInfo () {
-        return this.$store.getters.caseInfo;
+      issueInfo () {
+        return this.$store.getters.issueInfo;
       }
     },
     store: this.$store

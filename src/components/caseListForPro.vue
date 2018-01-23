@@ -33,7 +33,7 @@
       </mt-popup>
       <!--右侧案例列表-->
       <mt-popup class="case-list-panel" v-if="caseListPanel" v-model="caseListPanel" position="right" :modal="false">
-        <case-list-panel v-bind:case-list="caseList" v-on:closeCaseListPanel="closeCaseListPanel"></case-list-panel>
+        <case-charge-list-panel v-bind:case-list="caseList" v-on:showMarkerOnMap="showMarkerOnMap" v-on:closeCaseListPanel="closeCaseListPanel"></case-charge-list-panel>
       </mt-popup>
       <!--子路由，匹配审核面板-->
       <!--<router-view></router-view>-->
@@ -43,14 +43,14 @@
   import markerRed from '../assets/marker_red.png';
   import markerBlue from '../assets/marker_blue.png';
   import markerGreen from '../assets/marker_green.png';
-  import caseListPanel from './caseListPanel.vue';
+  import caseChargeListPanel from './caseChargeListPanel.vue';
   import caseInfoModel from './caseInfoModel.vue';
   import { qqMap } from '../qqMap.js';
   import {mapGetters, mapState} from 'vuex';
 
   export default {
     components: {
-      caseListPanel,
+      caseChargeListPanel,
       caseInfoModel
     },
     data () {
@@ -84,6 +84,7 @@
     },
     methods: {
       init (qq) {
+        let self = this;
         let storeMap = this.$store.getters.map;
         if (!storeMap) {
           this.centerLatlng = new qq.maps.LatLng(39.916527, 116.397128);
@@ -104,6 +105,11 @@
           margin: qq.maps.Size(85, 15),
           map: this.map
         });
+        // 地图空白处点击，收起sheet
+        qq.maps.event.addListener(this.map, 'click', function () {
+          self.editStatus = false;
+          self.caseInfoSheet = false;
+        });
         this.queryCaseList();
       },
       // 跳转
@@ -115,11 +121,16 @@
         this.caseInfoSheet = true;
         this.editStatus = true;
         this.centerLatlng = this.map.getCenter();
-        let self = this;
-        marker.callback = function (data) {
-          console.log(data);
-        };
-        this.$store.dispatch('queryCaseInfo', marker);
+        this.$store.dispatch('queryIssueInfo', marker);
+      },
+      // 地图上显示marker详情
+      showMarkerOnMap (info) {
+        this.caseInfoSheet = true;
+        this.editStatus = true;
+        this.centerLatlng = new qq.maps.LatLng(info.caseMarker.coordinates[1], info.caseMarker.coordinates[0]);
+        this.map.setCenter(this.centerLatlng);
+        this.$store.commit('SET_ISSUE', info);
+//        this.$store.dispatch('queryIssueInfo', info);
       },
       // 创建案例的marker
       createCaseMarker () {
@@ -142,15 +153,16 @@
       queryCaseList () {
         let self = this;
         let param = {
+          projectCode: self.selectProject.id,
           type: 0,
           callback: data => {
             self.createCaseMarker();
           }
         };
-        this.$store.dispatch('getCaseList', param);
+        this.$store.dispatch('getCaseListDetail', param);
       },
       // 初始化marker
-      createMarker (latLng, type, caseInfo) {
+      createMarker (latLng, type, issueInfo) {
         let markerLatLng = new qq.maps.LatLng(latLng.getLat(), latLng.getLng());
         let markerType;
         if (type === 'red') {
@@ -169,7 +181,7 @@
           draggable: false,
           // 自定义Marker图标为大头针样式
           icon: new qq.maps.MarkerImage(markerType),
-          id: caseInfo.id // 案例id
+          issue: issueInfo
         }));
       },
       // 打开左侧菜单栏
@@ -202,8 +214,9 @@
 //          }
 //        });
 //        this.$router.push('/caseEdit');
+        // this.$store.dispatch('checkProject', this.selectProject);
         if (type) {} else {}
-        console.log(this.caseInfo);
+        console.log(this.caseInfo, this.selectProject);
       },
       // 路由跳转待审核已审核
       routerTo (type) {

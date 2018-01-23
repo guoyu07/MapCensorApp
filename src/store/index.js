@@ -19,6 +19,13 @@ const state = {
   caseList: [],
   casePageNum: 1,
   selectProject: null,  // 选择的项目
+  issueInfo: {
+    caseCode: '',
+    caseSnap: '',
+    caseDesc: '',
+    caseMethod: '',
+    caseImages: []
+  },
   caseInfo: {
     caseSnap: '', // 案例概述
     caseDesc: '', // 案例描述

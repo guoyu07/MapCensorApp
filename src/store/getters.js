@@ -29,6 +29,9 @@ export default {
   selectProject: (state) => {
     return state.selectProject;
   },
+  issueInfo: (state) => {
+    return state.issueInfo;
+  },
   // casePageNum: (state) => {
   //   return state.casePageNum;
   // },
