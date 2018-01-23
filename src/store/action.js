@@ -408,6 +408,30 @@ export default {
       }
     });
   },
+  // 案例列表
+  getCaseListDetail (context, obj) {
+    axiosGet('/bs/case/listDetail', {
+      projectCode: obj.projectCode,
+      pageSize: obj.pageSize,
+      pageNum: obj.pageNum
+    }, res => {
+      if (res.data.errorCode > -1) {
+        // 加载更多
+        if (obj.type) {
+          context.commit('GET_CASE_MORE', {
+            caseList: res.data.result.data
+          });
+        } else {  // 刷新列表
+          context.commit('GET_CASE_LIST', {
+            caseList: res.data.result.data
+          });
+        }
+        if (obj.callback) {
+          obj.callback(res.data.result);
+        }
+      }
+    });
+  },
   // 用户查询
   getListDetail (context, obj) {
     axiosGet('/bs/case/listDetail', {
@@ -519,6 +543,20 @@ export default {
     }, res => {
       if (res.data.errorCode > -1) {
         context.commit('SET_CASE', res.data.result.data);
+        if (obj.callback) {
+          obj.callback(res.data.result);
+        }
+      }
+    });
+  },
+  // 问题查询
+  queryIssueInfo (context, obj) {
+    axiosGet('/bs/issue/find', {
+      proCode: obj.issue.proCode,
+      caseCode: obj.issue.caseCode
+    }, res => {
+      if (res.data.errorCode > -1) {
+        context.commit('SET_ISSUE', res.data.result);
         if (obj.callback) {
           obj.callback(res.data.result);
         }
