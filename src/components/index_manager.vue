@@ -17,6 +17,11 @@
                 <mt-button type="primary" size="small" @click="doSubmitInit(pro, 3, $event)">通过</mt-button>
                 <mt-button type="danger" size="small" @click="doSubmitInit(pro, 4, $event)">不通过</mt-button>
               </div>
+              <div v-if="selected === '3,4'">
+                  <div style="display: inline-block;">
+                    {{getProStatus(pro.projectStatus)}}
+                  </div>
+              </div>
             </mt-cell>
           </div>
           <!--</mt-search>-->
@@ -77,7 +82,7 @@
         <mt-cell title="项目描述" :value="selectProject.projectDesc"></mt-cell>
         <mt-cell title="问题数" :value="selectProject.issueTotal"></mt-cell>
         <mt-cell title="提交时间" :value="selectProject.submitAt"></mt-cell>
-        <mt-cell title="审核状态" :value="selectProject.projectStatus"></mt-cell>
+        <mt-cell title="审核状态" :value="getProStatus(selectProject.projectStatus)"></mt-cell>
         <mt-cell title="审核时间" :value="selectProject.auditedAt"></mt-cell>
       </div>
     </mt-popup>
@@ -145,6 +150,27 @@
           this.$store.commit('SET_PROJECT', project);
         }
         this.showInfo = !this.showInfo;
+      },
+      // 项目状态
+      getProStatus (type) {
+        let result;
+        switch (type) {
+          case 1:
+            result = '未提交';
+            break;
+          case 2:
+            result = '已提交';
+            break;
+          case 3:
+            result = '审核通过';
+            break;
+          case 4:
+            result = '审核不通过';
+            break;
+          default:
+            break;
+        }
+        return result;
       },
       // 顶部下拉刷新列表
       loadTopRefresh () {
