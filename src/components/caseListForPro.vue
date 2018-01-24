@@ -135,7 +135,7 @@
         marker.callback = function () {
           // 高亮选中marker
           self.highLightMarker();
-        }
+        };
         this.$store.dispatch('queryIssueInfo', marker);
       },
       // 地图上显示marker详情
