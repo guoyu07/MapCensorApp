@@ -116,11 +116,26 @@
       goHistory () {
         this.$router.goBack();
       },
+      // 筛选选中的marker高亮
+      highLightMarker () {
+        for (let i = 0; i < this.caseMarkers.length; i++) {
+          if (this.issueInfo.caseCode === this.caseMarkers[i].caseCode) {
+            this.caseMarkers[i].setIcon(new qq.maps.MarkerImage(markerRed));
+          } else {
+            this.caseMarkers[i].setIcon(new qq.maps.MarkerImage(markerBlue));
+          }
+        }
+      },
       // 查询单个案例详情
       queryCaseInfo (marker) {
+        let self = this;
         this.caseInfoSheet = true;
         this.editStatus = true;
         this.centerLatlng = this.map.getCenter();
+        marker.callback = function () {
+          // 高亮选中marker
+          self.highLightMarker();
+        };
         this.$store.dispatch('queryIssueInfo', marker);
       },
       // 地图上显示marker详情
@@ -129,6 +144,8 @@
         this.editStatus = true;
         this.centerLatlng = new qq.maps.LatLng(info.caseMarker.coordinates[1], info.caseMarker.coordinates[0]);
         this.map.setCenter(this.centerLatlng);
+        // 高亮选中marker
+        this.highLightMarker();
         this.$store.commit('SET_ISSUE', info);
 //        this.$store.dispatch('queryIssueInfo', info);
       },
@@ -181,6 +198,7 @@
           draggable: false,
           // 自定义Marker图标为大头针样式
           icon: new qq.maps.MarkerImage(markerType),
+          caseCode: issueInfo.caseCode,
           issue: issueInfo
         }));
       },
