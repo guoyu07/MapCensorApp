@@ -119,7 +119,7 @@
       getCaseList () {
         let obj = {};
         let self = this;
-        obj.projectCode = this.selectProject.id
+        obj.projectCode = this.selectProject.id;
         this.$store.dispatch('getCaseListDetail', obj);
       },
       doSave () {

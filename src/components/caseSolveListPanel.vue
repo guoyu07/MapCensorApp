@@ -82,7 +82,7 @@
         let self = this;
 //        obj.pageNum = this.pageNum;
 //        obj.pageSize = this.pageSize;
-        obj.projectCode = this.selectProject.id,
+        obj.projectCode = this.selectProject.id;
         obj.type = type;  // 0 刷新 1加载更多
         obj.callback = function () {
           self.topStatus = '';
