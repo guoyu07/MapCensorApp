@@ -5,29 +5,17 @@
           <i class="fa fa-angle-left menu-left-icon"></i>
           返回
         </div>
-        <div class="map-search-container">{{selectProject.projectName}}</div>
+        <div class="map-search-container"></div>
         <div class="menu-right-container" @click="openCaseList">
           列表
           <i class="fa fa-bars menu-right-icon"></i>
         </div>
       </div>
       <div id="mapContainer" :class="{'set-map': editStatus, 'show-map': !editStatus}"></div>
-      <div v-if="$store.getters.user.role === 'manager'" :class="{'poi-list-panel': true, 'slideIn': caseInfoSheet, 'slideOut': !caseInfoSheet}">
-        <div class="poi-list-container">
-          <issue-info-model></issue-info-model>
+      <div :class="{'poi-list-panel': true, 'slideIn': caseInfoSheet, 'slideOut': !caseInfoSheet}">
+        <div class="poi-list-container" style="margin-bottom: 0;">
+          <case-info-model></case-info-model>
         </div>
-        <div class="case-info-btn-group">
-          <mt-button class="case-info-btn danger" @click.native="doPassCase(2)" :disabled="issueInfo.issueStatus == 2">不通过</mt-button>
-          <mt-button class="case-info-btn primary" @click.native="doPassCase(1)" :disabled="issueInfo.issueStatus == 1">通过</mt-button>
-        </div>
-      </div>
-      <div v-if="$store.getters.user.role === 'worker'" :class="{'poi-list-panel': true, 'slideIn': caseInfoSheet, 'slideOut': !caseInfoSheet}">
-        <div class="poi-list-container">
-          <issue-solve-model></issue-solve-model>
-        </div>
-        <!-- <div class="case-info-btn-group">
-          <mt-button class="case-info-btn primary" style="width: 100%;" @click.native="doPassCase(1)" :disabled="issueInfo.issueStatus == 1">保存</mt-button>
-        </div> -->
       </div>
       <!--左侧tab列表-->
       <mt-popup
@@ -41,12 +29,7 @@
       </mt-popup>
       <!--右侧案例列表-->
       <mt-popup class="case-list-panel" v-if="caseListPanel" v-model="caseListPanel" position="right" :modal="false">
-        <div v-if="$store.getters.user.role === 'manager'">
-          <case-charge-list-panel v-bind:case-list="caseList" v-on:showMarkerOnMap="showMarkerOnMap" v-on:closeCaseListPanel="closeCaseListPanel"></case-charge-list-panel>
-        </div>
-        <div v-if="$store.getters.user.role === 'worker'">
-          <case-solve-list-panel v-bind:case-list="caseList" v-on:showMarkerOnMap="showMarkerOnMap" v-on:closeCaseListPanel="closeCaseListPanel"></case-solve-list-panel>
-        </div>
+        <case-list-show-panel v-bind:case-list="caseList" v-on:showMarkerOnMap="showMarkerOnMap" v-on:closeCaseListPanel="closeCaseListPanel"></case-list-show-panel>
       </mt-popup>
       <!--子路由，匹配审核面板-->
       <!--<router-view></router-view>-->
@@ -56,19 +39,15 @@
   import markerRed from '../assets/marker_red.png';
   import markerBlue from '../assets/marker_blue.png';
   import markerGreen from '../assets/marker_green.png';
-  import caseChargeListPanel from './caseChargeListPanel.vue';
-  import caseSolveListPanel from './caseSolveListPanel.vue';
-  import issueInfoModel from './issueInfoModel.vue';
-  import issueSolveModel from './issueSolveModel.vue';
+  import caseListShowPanel from './caseListShowPanel.vue';
+  import caseInfoModel from './caseInfoModel.vue';
   import { qqMap } from '../qqMap.js';
   import {mapGetters, mapState} from 'vuex';
 
   export default {
     components: {
-      caseChargeListPanel,
-      caseSolveListPanel,
-      issueInfoModel,
-      issueSolveModel
+      caseListShowPanel,
+      caseInfoModel
     },
     data () {
       return {
@@ -136,7 +115,7 @@
       // 筛选选中的marker高亮
       highLightMarker () {
         for (let i = 0; i < this.caseMarkers.length; i++) {
-          if (this.issueInfo.caseCode === this.caseMarkers[i].caseCode) {
+          if (this.caseInfo.id === this.caseMarkers[i].id) {
             this.caseMarkers[i].setIcon(new qq.maps.MarkerImage(markerRed));
           } else {
             this.caseMarkers[i].setIcon(new qq.maps.MarkerImage(markerBlue));
@@ -153,18 +132,17 @@
           // 高亮选中marker
           self.highLightMarker();
         };
-        this.$store.dispatch('queryIssueInfo', marker);
+        this.$store.dispatch('queryCaseInfo', marker);
       },
       // 地图上显示marker详情
       showMarkerOnMap (info) {
         this.caseInfoSheet = true;
         this.editStatus = true;
-        this.centerLatlng = new qq.maps.LatLng(info.caseMarker.coordinates[1], info.caseMarker.coordinates[0]);
+        this.centerLatlng = new qq.maps.LatLng(info.marker.coordinates[1], info.marker.coordinates[0]);
         this.map.setCenter(this.centerLatlng);
         // 高亮选中marker
         this.highLightMarker();
         this.$store.commit('SET_ISSUE', info);
-//        this.$store.dispatch('queryIssueInfo', info);
       },
       // 创建案例的marker
       createCaseMarker () {
@@ -187,16 +165,15 @@
       queryCaseList () {
         let self = this;
         let param = {
-          projectCode: self.selectProject.id,
           type: 0,
           callback: data => {
             self.createCaseMarker();
           }
         };
-        this.$store.dispatch('getCaseListDetail', param);
+        this.$store.dispatch('getCaseList', param);
       },
       // 初始化marker
-      createMarker (latLng, type, issueInfo) {
+      createMarker (latLng, type, caseInfo) {
         let markerLatLng = new qq.maps.LatLng(latLng.getLat(), latLng.getLng());
         let markerType;
         if (type === 'red') {
@@ -215,8 +192,7 @@
           draggable: false,
           // 自定义Marker图标为大头针样式
           icon: new qq.maps.MarkerImage(markerType),
-          caseCode: issueInfo.caseCode,
-          issue: issueInfo
+          id: caseInfo.id
         }));
       },
       // 打开案例列表面板
@@ -234,25 +210,6 @@
           this.editStatus = false;
         }
       },
-      // 通过/不通过
-      doPassCase (type) {
-        let self = this;
-        if (!this.issueInfo.caseCode) {
-          this.$toast({
-            message: 'caseCode不能为空',
-            position: 'bottom'
-          });
-          return;
-        }
-        let param = {
-          issueId: this.issueInfo.caseCode,
-          callback () {
-            self.issueInfo.issueStatus = type;
-          }
-        };
-        param.issueStatus = type;
-        this.$store.dispatch('auditIssue', param);
-      },
       // 路由跳转待审核已审核
       routerTo (type) {
         this.$router.push({
@@ -268,7 +225,7 @@
     },
     computed: {
       ...mapGetters([
-        'caseList', 'selectProject', 'caseInfo', 'issueInfo'
+        'caseList', 'caseInfo'
       ])
     },
     watch: {

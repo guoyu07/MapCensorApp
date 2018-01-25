@@ -4,7 +4,7 @@
       <mt-button icon="back" type="primary" size="small" v-on:click="closePanel" style="vertical-align: top;margin-left: -81px;padding-top: 5px;">返回</mt-button>
       <mt-search v-model="searchText" class="header-search"></mt-search>
     </div>
-    <mt-loadmore class="primary">
+    <mt-loadmore class="primary" :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
       <ul class="cs-ul">
         <li>
           <div class="seq"><span>序号</span></div>
@@ -59,10 +59,10 @@
       closePanel () {
         this.$emit('closeCaseListPanel');
       },
-//      loadTop () {
-//        this.pageNum = 1;
-//        this.getCaseList();
-//      },
+      loadTop () {
+        this.pageNum = 1;
+        this.getCaseList();
+      },
 //      infiniteLoad () {
 //        // 数据未满20*?，不用加载更多
 //        if (this.caseList.length < this.pageNum * this.pageSize) {

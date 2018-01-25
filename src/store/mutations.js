@@ -71,15 +71,23 @@ export default {
     if (!value.caseCode) {
       // 新建
       value.caseImages = [];
+      value.issueImages = [];
       state.issueInfo = value;
     } else {
       state.issueInfo = Object.assign({}, state.issueInfo, value);
       let fmtImages = [];
+      let fmtIsueImg = [];
       if (state.issueInfo.caseImages.length) {
         for (let i = 0; i < state.issueInfo.caseImages.length; i++) {
           fmtImages.push(Application.SERVICE + state.issueInfo.caseImages[i]);
         }
         state.issueInfo.caseImages = fmtImages;
+      }
+      if (state.issueInfo.issueImages.length) {
+        for (let i = 0; i < state.issueInfo.issueImages.length; i++) {
+          fmtIsueImg.push(Application.SERVICE + state.issueInfo.issueImages[i]);
+        }
+        state.issueInfo.issueImages = fmtIsueImg;
       }
     }
   },

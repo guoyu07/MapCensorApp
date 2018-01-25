@@ -10,18 +10,13 @@
           <div class="seq"><span>序号</span></div>
           <div class="description"><span>案例概述</span></div>
           <div class="enclosure"><span>附件数</span></div>
-          <div class="status"><span>处理状态</span></div>
+          <div class="status"><span>处理</span></div>
         </li>
         <li v-for="(item, index) in filterdCaseList" :key="item.id" v-on:click="showCaseInfo(item)">
           <div class="seq"><span>{{index + 1}}</span></div>
           <div class="description"><span>{{item.caseDesc}}</span></div>
           <div class="enclosure"><span>{{item.caseMediaLength}}</span></div>
-          <div class="status">
-            <span v-if="item.issueStatus == 0">未审核</span>
-            <span v-else-if="item.issueStatus == 1">通过</span>
-            <span v-else-if="item.issueStatus == 2">不通过</span>
-            <span v-else>未审核</span>
-          </div>
+          <div class="status">{{item.issueMediaLength}}</div>
           <div style="padding-left: 2%"><i class="fa fa-angle-right "></i></div>
         </li>
       </ul>
@@ -87,13 +82,14 @@
         let self = this;
 //        obj.pageNum = this.pageNum;
 //        obj.pageSize = this.pageSize;
+        obj.projectCode = this.selectProject.id;
         obj.type = type;  // 0 刷新 1加载更多
         obj.callback = function () {
           self.topStatus = '';
           self.$refs.loadmore.onTopLoaded();
           self.loading = false;
         };
-        this.$store.dispatch('getCaseList', obj);
+        this.$store.dispatch('getCaseListDetail', obj);
       }
     },
     watch: {
@@ -105,6 +101,9 @@
     computed: {
       caseList () {
         return this.$store.getters.caseList;
+      },
+      selectProject () {
+        return this.$store.getters.selectProject;
       },
       filterdCaseList () {
         return this.caseList.filter((item) => {

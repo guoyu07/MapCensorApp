@@ -580,6 +580,59 @@ export default {
       });
     });
   },
+  // 创建问题
+  createIssue (context, obj) {
+    if (obj.images.length) {
+      for (let i = 0; i < obj.images.length; i++) {
+        obj.images[i] = obj.images[i].replace(Application.SERVICE, '');
+      }
+    }
+    axiosPost('/bs/issue/create', {
+      proCode: obj.proCode,
+      caseCode: obj.caseCode,
+      images: obj.images,
+      videos: obj.videos
+    }, res => {
+      if (res.data.errorCode > -1) {
+        if (obj.callback) {
+          obj.callback();
+        }
+      }
+      Toast({
+        message: res.data.message,
+        position: 'bottom'
+      });
+    });
+  },
+  // 项目删除
+  deleteProject (context, obj) {
+    axiosGet('/bs/project/delete', {
+      id: obj.id
+    }, res => {
+      if (res.data.errorCode > -1) {
+        if (obj.callback) {
+          obj.callback(res.data.result);
+        }
+      }
+    });
+  },
+  // 创建项目
+  createProject (context, obj) {
+    axiosPost('/bs/project/create', {
+      projectName: obj.projectName,
+      projectDesc: obj.projectDesc
+    }, res => {
+      if (res.data.errorCode > -1) {
+        if (obj.callback) {
+          obj.callback();
+        }
+      }
+      Toast({
+        message: res.data.message,
+        position: 'bottom'
+      });
+    });
+  },
   /**
    * **************************** 腾讯地图服务 *********************************
    */
