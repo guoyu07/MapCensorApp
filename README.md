@@ -25,9 +25,8 @@ npm test
 ```
 
 ![登录](https://raw.githubusercontent.com/wangmingdong/docImg/master/1.png)
-
+![地图](https://raw.githubusercontent.com/wangmingdong/docImg/master/QQ%E6%88%AA%E5%9B%BE20180125162941.png)
 ## 注意事项
 
-> 1、目前没加过滤器，登录认证有些问题，点击退出可能无法完全退出，需要重新刷新；
->
-> 2、当前只支持权限为superManage；
+> 表单校验暂时未加；
+> 找回密码功能未加；
