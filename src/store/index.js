@@ -24,7 +24,8 @@ const state = {
     caseSnap: '',
     caseDesc: '',
     caseMethod: '',
-    caseImages: []
+    caseImages: [],
+    issueImages: []
   },
   caseInfo: {
     caseSnap: '', // 案例概述

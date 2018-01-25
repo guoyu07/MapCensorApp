@@ -10,8 +10,10 @@ import IndexManager from '@/components/index_manager';
 import IndexWorker from '@/components/index_worker';
 import CaseList from '@/components/case_list';
 import CaseListForPro from '@/components/caseListForPro';
+import CaseListShow from '@/components/caseListShow';
 import CaseEdit from '@/components/caseEditPanel';
 import CensorDlg from '@/components/censorDlg';
+import CreateProject from '@/components/createProject';
 
 Vue.use(VueRouter);
 // const Login = resolve => require(['@/components/login.vue'], resolve); //实现组件按需加载
@@ -80,6 +82,20 @@ const routes = [
       requireAuth: true
     },
     name: 'caseListForPro'
+  }, {
+    path: '/caseListShow',
+    component: CaseListShow,
+    meta: {
+      requireAuth: true
+    },
+    name: 'caseListShow'
+  }, {
+    path: '/createProject',
+    component: CreateProject,
+    meta: {
+      requireAuth: true
+    },
+    name: 'createProject'
   }, {
     path: '/caseEdit',
     component: CaseEdit,

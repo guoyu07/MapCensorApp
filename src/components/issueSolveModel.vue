@@ -3,30 +3,66 @@
       <div>
         <div class="text-container">
           <div class="text-label">案例编号</div>
-          <div class="text-info">{{caseInfo.id}}</div>
+          <div class="text-info">{{issueInfo.caseCode}}</div>
         </div>
         <div class="text-container">
           <div class="text-label">案例概述</div>
-          <div class="text-info">{{caseInfo.caseSnap}}</div>
+          <div class="text-info">{{issueInfo.caseSnap}}</div>
         </div>
         <div class="text-container">
           <div class="text-label">详细描述</div>
-          <div class="text-info">{{caseInfo.caseDesc}}</div>
+          <div class="text-info">{{issueInfo.caseDesc}}</div>
         </div>
         <div class="text-container">
           <div class="text-label">解决方案</div>
-          <div class="text-info">{{caseInfo.caseMethod}}</div>
+          <div class="text-info">{{issueInfo.caseMethod}}</div>
         </div>
-        <!--<mt-field label="案例编号" placeholder="" type="text" v-model="caseInfo.caseCode"></mt-field>-->
-        <!--<mt-field label="案例概述" placeholder="" type="text" v-model="caseInfo.caseSnap"></mt-field>-->
-        <!--<mt-field label="详细描述" placeholder="" type="text" v-model="caseInfo.caseDesc"></mt-field>-->
-        <!--<mt-field label="解决方案" placeholder="" type="text" v-model="caseInfo.caseMethod"></mt-field>-->
-        <div class="img-container">
-          <viewer :images="caseInfo.images" class="images-list">
-            <div class="images-content" v-for="(src, index) in caseInfo.images">
+        <!--<mt-field label="案例编号" placeholder="" type="text" v-model="issueInfo.caseCode"></mt-field>-->
+        <!--<mt-field label="案例概述" placeholder="" type="text" v-model="issueInfo.caseSnap"></mt-field>-->
+        <!--<mt-field label="详细描述" placeholder="" type="text" v-model="issueInfo.caseDesc"></mt-field>-->
+        <!--<mt-field label="解决方案" placeholder="" type="text" v-model="issueInfo.caseMethod"></mt-field>-->
+        <div class="img-container text-container" v-if="issueInfo.caseImages.length">
+          <viewer :images="issueInfo.caseImages" class="images-list">
+            <div class="images-content" v-for="(src, index) in issueInfo.caseImages">
               <img :src="src" :key="src">
             </div>
           </viewer>
+        </div>
+        <div class="img-container text-container">
+          <viewer :images="issueInfo.issueImages" class="images-list">
+            <div class="img-add" v-on:click="showImgSheet(true)">
+            </div>
+            <div class="images-content" v-for="(src, index) in issueInfo.issueImages">
+              <img :src="src" :key="src">
+              <div class="close-img">
+                <i class="fa fa-close close-icon" v-on:click="remoteImg(index)"></i>
+              </div>
+            </div>
+          </viewer>
+        </div>
+      </div>
+      <div class="bottom-option" v-if="!imageSheet" style="left: 0;">
+        <mt-button class="list-btn" @click.native="doCancel">取消</mt-button>
+        <mt-button class="list-btn primary" @click.native="doSave">保存</mt-button>
+      </div>
+      <div class="img-upload-model" v-on:click="showImgSheet(false)" v-if="imageSheet"></div>
+      <div :class="{'img-upload-panel': true, 'slideIn': imageSheet, 'slideOut': !imageSheet}" style="left: 0;">
+        <div class="sheet-container">
+          <div class="sheet-list">拍照（未实现）</div>
+          <div class="sheet-list">
+            <vue-core-image-upload
+              :class="['img-upload']"
+              text="从相册中选择"
+              :crop="false"
+              @imageuploaded="imageuploaded"
+              input-accept="image/*"
+              :data="uploadImg"
+              :credentials=false
+              :max-file-size="5242880"
+              :url="uploadUrl" >
+            </vue-core-image-upload>
+          </div>
+          <div class="sheet-list" v-on:click="showImgSheet(false)">取消</div>
         </div>
       </div>
     </div>
@@ -35,6 +71,7 @@
 <script>
   import { MessageBox } from 'mint-ui';
   import VueCoreImageUpload from 'vue-core-image-upload';
+  import {mapGetters, mapState} from 'vuex';
   export default {
     name: 'caseEditPanel',
     props: [],
@@ -55,53 +92,56 @@
       doCancel () {
         this.$router.push('/case_list');
       },
-      doDelete () {
-        let self = this;
-        MessageBox({
-          title: '提示',
-          message: '确定删除此案例?',
-          showCancelButton: true,
-          callback (data) {
-            if (data === 'confirm') {
-              self.caseInfo.callback = function () {
-                self.$router.push('/case_list');
-                self.$store.getters.map.setCenter(new qq.maps.LatLng(self.caseInfo.caseMarker.coordinates[1], self.caseInfo.caseMarker.coordinates[0]));
-              };
-              self.$store.dispatch('deleteCase', self.caseInfo);
-            }
-          }
-        });
-      },
       // 删除图片
       remoteImg (index) {
         console.log(index);
-        this.caseInfo.images.splice(index, 1);
+        this.issueInfo.caseImages.splice(index, 1);
+      },
+      // 图片上传打开sheet
+      showImgSheet (flag) {
+        this.imageSheet = flag;
+      },
+      openImgSource () {
+        let imgInput = document.getElementById('#imageUpload');
+        imgInput.click();
+      },
+      imageuploaded (res) {
+        this.imageSheet = false;
+        if (res && res.errorCode === 0) {
+          this.$toast({
+            message: res.message,
+            position: 'bottom'
+          });
+          this.issueInfo.issueImages.push(this.app.SERVICE + res.result.data[0]);
+        }
+      },
+      // 查询列表
+      getCaseList () {
+        let obj = {};
+        let self = this;
+        obj.projectCode = this.selectProject.id
+        this.$store.dispatch('getCaseListDetail', obj);
       },
       doSave () {
-        console.log(this.caseInfo);
+        console.log(this.issueInfo);
         let self = this;
-        if (this.caseInfo.caseCode) {
-          // edit
-          this.caseInfo.callback = function () {
-            self.$router.push('/case_list');
-            self.$store.getters.map.setCenter(new qq.maps.LatLng(this.marker.coordinates[1], this.marker.coordinates[0]));
-          };
-          this.$store.dispatch('updateCase', this.caseInfo);
-        } else {
-          this.caseInfo.callback = function (caseRes) {
-            console.log(caseRes.marker);
-            self.$router.push('/case_list');
-            self.$store.getters.map.setCenter(new qq.maps.LatLng(caseRes.marker.coordinates[1], caseRes.marker.coordinates[0]));
-          };
-          // create
-          this.$store.dispatch('createCase', this.caseInfo);
-        }
+        let param = {
+          caseCode: this.issueInfo.caseCode,
+          proCode: this.selectProject.id,
+          images: this.issueInfo.issueImages,
+          videos: this.videos,
+          callback () {
+            self.getCaseList();
+          }
+        };
+        // create
+        this.$store.dispatch('createIssue', param);
       }
     },
     computed: {
-      caseInfo () {
-        return this.$store.getters.caseInfo;
-      }
+      ...mapGetters([
+        'selectProject', 'caseInfo', 'issueInfo'
+      ])
     },
     store: this.$store
   };
@@ -109,7 +149,6 @@
 
 <style lang="less">
   .edit-model {
-    margin-bottom: 40px;
     .img-container {
       .img-add {
         width: 15%;
