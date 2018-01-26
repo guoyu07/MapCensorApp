@@ -173,11 +173,14 @@ export default {
   },
   // 查询列表数据
   getUserList (context, obj) {
-    axiosGet('/om/user/find', {
-      status: '[' + obj.status.toString() + ']',
+    let param = {
       pageSize: obj.pageSize,
       pageNum: obj.pageNum
-    }, res => {
+    };
+    if (obj.status) {
+      param.status = '[' + obj.status.toString() + ']';
+    };
+    axiosGet('/om/user/find', param, res => {
       if (res.data.errorCode > -1) {
         // 加载更多
         if (obj.type) {
@@ -192,7 +195,7 @@ export default {
           });
         }
         if (obj.callback) {
-          obj.callback();
+          obj.callback(res.data.result.data);
         }
       } else {
         Toast({
@@ -621,6 +624,23 @@ export default {
     axiosPost('/bs/project/create', {
       projectName: obj.projectName,
       projectDesc: obj.projectDesc
+    }, res => {
+      if (res.data.errorCode > -1) {
+        if (obj.callback) {
+          obj.callback();
+        }
+      }
+      Toast({
+        message: res.data.message,
+        position: 'bottom'
+      });
+    });
+  },
+  // 提交项目
+  submitProject (context, obj) {
+    axiosPost('/bs/project/submit', {
+      projectId: obj.projectId,
+      auditUser: obj.auditUser
     }, res => {
       if (res.data.errorCode > -1) {
         if (obj.callback) {

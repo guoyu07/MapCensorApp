@@ -12,7 +12,6 @@ import CaseList from '@/components/case_list';
 import CaseListForPro from '@/components/caseListForPro';
 import CaseListShow from '@/components/caseListShow';
 import CaseEdit from '@/components/caseEditPanel';
-import CensorDlg from '@/components/censorDlg';
 import CreateProject from '@/components/createProject';
 
 Vue.use(VueRouter);

@@ -12,12 +12,16 @@
           <div class="enclosure"><span>附件数</span></div>
           <div class="status"><span>处理</span></div>
         </li>
-        <li v-for="(item, index) in filterdCaseList" :key="item.id" v-on:click="showCaseInfo(item)">
-          <div class="seq"><span>{{index + 1}}</span></div>
+        <li v-for="(item, index) in filterdCaseList" :key="item.id" :class="{'checked': item.issueStatus != null, 'case-ul-list': true}" v-on:click="showCaseInfo(item)">
+          <div class="seq">
+            <span>
+              {{index + 1}}
+            </span>
+          </div>
           <div class="description"><span>{{item.caseDesc}}</span></div>
           <div class="enclosure"><span>{{item.caseMediaLength}}</span></div>
           <div class="status">{{item.issueMediaLength}}</div>
-          <div style="padding-left: 2%"><i class="fa fa-angle-right "></i></div>
+          <div style="padding-left: 2%"><i class="fa fa-angle-right case-checked"></i></div>
         </li>
       </ul>
     </mt-loadmore>
@@ -118,6 +122,11 @@
   @import './../less/base.less';
 
   .list-panel {
+    .case-ul-list {
+      &.checked {
+        color: #26a2ff;
+      }
+    }
     .panel-header {
       height: 43px;
       padding: 5px 10px 0 81px;
@@ -158,7 +167,13 @@
           text-align: center;
           vertical-align: top;
         }
-        .seq { width: 10%; }
+        .seq { 
+          width: 10%;
+          .case-checked {
+            font-size: 10px;
+            color: green;
+          }
+        }
         .description { width: 43%; }
         .enclosure { width: 15%; }
         .status { width: 25%; }
