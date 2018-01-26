@@ -57,4 +57,103 @@
       }
     }
   }
+  .user-list-panel {
+    position: fixed;
+    width: 100%;
+    height: 40%;
+    display: flex;
+    bottom: 0;
+    background-color: #fff;
+    border-top: 1px solid #e4e4e4;
+    z-index: 4;
+    //border-top: 1px solid #3a3a3a;
+    visibility: hidden;
+    animation-duration: .3s;
+    animation-fill-mode: both;
+    &.slideIn {
+      animation-name: slideInUp;
+    }
+    &.slideOut {
+      animation-name: slideOutDown;
+    }
+    .user-list-container {
+      max-height: 250px;
+      overflow: auto;
+      margin-bottom: 42px;
+      width: 100%;
+      padding: 0 10px;
+      .user-list-item {
+        padding: 5px 0;
+        //margin-top: -1px;
+        border-top: 1px solid #e4e4e4;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        &.user-list-now {
+          //position: fixed;
+          padding: 10px 0;
+          top: 0;
+          width: 100%;
+          background-color: #fff;
+          //border-bottom: 1px solid #9a9a9a;
+          justify-content: space-between;
+          .user-list-content {
+            padding-left: 10px;
+            width: 95px;
+          }
+          .user-list-title {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            //margin-left: 10px;
+          }
+          .user-list-option {
+            //margin-right: 10px;
+          }
+        }
+        .user-list-content {
+          width: 90%;
+          .user-list-title {
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .user-list-address {
+            font-size: 12px;
+            color: #b5b5b5;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            //width: 340px;
+          }
+        }
+        .user-list-option {
+          width: 10%;
+          text-align: right;
+          .fa-check {
+            color: #26a2ff;
+          }
+        }
+      }
+    }
+    .user-list-btn-group {
+      position: fixed;
+      display: flex;
+      bottom: 0;
+      width: 100%;
+      background-color: #fff;
+      border-top: 1px solid #b6b6b6;
+      .user-list-btn {
+        width: 50%;
+        border-radius: 0;
+        background-color: #fff;
+        &.primary {
+          background-color: #26a2ff;
+          color: #fff;
+        }
+      }
+    }
+  }
 }

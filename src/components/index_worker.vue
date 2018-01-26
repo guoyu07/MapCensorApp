@@ -15,16 +15,15 @@
                      infinite-scroll-disabled="loading" infinite-scroll-distance="10">
           <!--<mt-search v-model="searchText" show>-->
           <div v-on:click="popupInfo(pro)"  v-for="pro in list.list" :key="pro.id">
-            <mt-cell-swipe v-if="selected === '1,4'" class="user-list-cell" :title="pro.projectName" :label="pro.projectDesc"
+            <mt-cell-swipe v-if="selected === '1,4'" class="user-list-cell check-list-cell" :title="pro.projectName" :label="pro.projectDesc"
              :right="[{
                 content: '删除',
                 style: { background: 'red', color: '#fff' },
-                handler: () => deleteProject(pro)
-                }]" is-link>
-              <div v-if="selected === '1,4'">
+                handler: () => deleteProject(pro)}]" is-link>
+              <div>
                   <div style="display: inline-block;">
                     <div style="display: inline-block;">{{Math.round((pro.worked/pro.issueTotal)*10000).toFixed(4)/100}}%</div>
-                    <mt-button type="primary" size="small" @click="doSubmitInit(pro, 4, $event)" :disabled="pro.worked !== pro.issueTotal">提交</mt-button>
+                    <mt-button type="primary" size="small" @click="doSubmitConfirm(pro, 4, $event)" :disabled="pro.worked !== pro.issueTotal">提交</mt-button>
                   </div>
               </div>
             </mt-cell-swipe>
@@ -126,6 +125,23 @@
         <mt-cell title="审核时间" :value="selectProject.auditedAt"></mt-cell>
       </div>
     </mt-popup>
+    <div :class="{'user-list-panel': true, 'slideIn': userListSheet, 'slideOut': !userListSheet}">
+      <div class="user-list-container">
+        <div class="user-list-item" @click="selectUserRow(item)" v-for="item in allManagers">
+          <div class="user-list-content">
+            <div class="user-list-title">{{item.userName}}</div>
+            <div class="user-list-address">{{item.fullName}}</div>
+          </div>
+          <div class="user-list-option">
+            <i class="fa fa-check" v-if="selectManager && selectManager.id == item.id"></i>
+          </div>
+        </div>
+      </div>
+      <div class="user-list-btn-group">
+        <mt-button class="user-list-btn" @click.native="changeSheetStatus(false)">关闭</mt-button>
+        <mt-button class="user-list-btn primary" @click.native="submitPro()">确定</mt-button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -144,6 +160,10 @@
         timeLine: this.$store.getters.list.timeLine,
         loading: false,
         showInfo: false,
+        allUsers: [],
+        allManagers: [],
+        userListSheet: false,
+        selectManager: null,
 //      searchText: '', // 搜索内容
         tabList: [
           {id: '1,4', name: '待作业', index: 0, topStatus: '', icon: 'fa fa-eye'},
@@ -176,6 +196,29 @@
           self.loading = false;
         };
         this.$store.dispatch('getProjectList', obj);
+      },
+      // 改变userSheet状态
+      changeSheetStatus (status) {
+        this.userListSheet = status;
+      },
+      // 查询用户
+      getAllUsers () {
+        let self = this;
+        let param = {
+          callback (data) {
+            self.allUsers = data;
+            self.allManagers = [];
+            for (let i = 0; i < self.allUsers.length; i++) {
+              if (self.allUsers[i].role === 'manager') {
+                self.allManagers.push(self.allUsers[i]);
+              }
+            }
+            if (self.allManagers.length) {
+              self.selectManager = self.allManagers[0];
+            }
+          }
+        };
+        this.$store.dispatch('getUserList', param);
       },
       // 查看案例列表
       showCaseList () {
@@ -264,13 +307,30 @@
         };
         this.$store.dispatch('checkProject', obj);
       },
+      // 选择管理员
+      selectUserRow (user) {
+        this.selectManager = user;
+      },
       // 提交
-      doSubmitInit (pro, status, event) {
+      submitPro () {
+        let self = this;
+        let param = {
+          projectId: this.selectProject.id,
+          auditUser: this.selectManager.id,
+          callback: function () {
+            self.changeSheetStatus(false);
+            self.getProjectList();
+          }
+        };
+        this.$store.dispatch('submitProject', param);
+      },
+      // 确认提交
+      doSubmitConfirm (pro, status, event) {
         let self = this;
         event.cancelBubble = true;
         MessageBox({
           title: '提示',
-          message: '确定执行此操作?',
+          message: '确定提交此项目?',
           showCancelButton: true,
           callback (data) {
             self.selectProject = pro;
@@ -279,7 +339,7 @@
             } else {  // 取消
               return;
             }
-            self.doCheckPro();
+            self.changeSheetStatus(true);
           }
         });
       },
@@ -322,6 +382,7 @@
         return;
       }
       this.getProjectList();
+      this.getAllUsers();
     },
     store: this.$store
   };
