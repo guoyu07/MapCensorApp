@@ -2,8 +2,8 @@
     <div class="login">
     	<mt-field name="username" label="用户名" placeholder="请输入用户名" v-model="username"></mt-field>
     	<mt-field name="password" label="密码" placeholder="请输入密码" type="password" v-model="password"></mt-field>
-
-		<mt-button type="primary" size="large" @click="save()">登录</mt-button>
+      <div class="find-psw" @click="forgotPsw">找回密码</div>
+  		<mt-button type="primary" size="large" @click="save()">登录</mt-button>
     </div>
 </template>
 
@@ -35,6 +35,9 @@
 //        }).then(function (data) {
 //          console.log(data);
 //        });
+      },
+      forgotPsw () {
+        this.$router.push('/forgotPsw');
       }
     },
     directives: {
@@ -49,3 +52,14 @@
     }
   };
 </script>
+<style lang="less">
+  .find-psw {
+    text-align: right;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-decoration: underline;
+    color: #26a2ff;
+  }
+</style>
+

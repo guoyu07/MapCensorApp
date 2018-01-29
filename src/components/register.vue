@@ -1,5 +1,5 @@
 <template>
-    <div class="login">
+    <div class="register">
     	<mt-field v-validate="'required:true'" :state="errors.has('username') || !username ? 'error':'success'" label="账号" name="username" placeholder="账号" v-model="username"></mt-field>
     	<mt-field v-validate="'required'" :state="errors.has('fullName') || !fullName ? 'error':'success'" label="全称" name="fullName" placeholder="全称" v-model="fullName"></mt-field>
     	<mt-field v-validate="'required|email'" :state="errors.has('email') || !email ? 'error':'success'" :class="{'input': true, 'is-danger': errors.has('email') }" label="邮箱" placeholder="邮箱" name="email" type="email" v-model="email"></mt-field>

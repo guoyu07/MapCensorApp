@@ -85,35 +85,6 @@ export default {
         });
       }
     });
-      // axios.post(Application.SERVICE_URL + '/om/user/login', {
-      //   userName: obj.username,
-      //   password: obj.password
-      // }).then(function (res) {
-      //   if (res.data.errorCode > -1) {
-      //     context.commit('SHOW_USER', {
-      //       role: res.data.result.role,
-      //       username: obj.username,
-      //       password: obj.password
-      //     });
-      //     Application.TOKEN = res.data.result.token;
-      //     localStorage.setItem('token', Application.TOKEN);
-      //     Toast({
-      //       message: '登录成功!',
-      //       position: 'bottom'
-      //     });
-      //   } else {
-      //     Toast({
-      //       message: res.data.message,
-      //       position: 'bottom'
-      //     });
-      //   }
-      // }).catch(function (err) {
-      //   console.log(err);
-      //   Toast({
-      //     message: '登录失败!',
-      //     position: 'bottom'
-      //   });
-      // });
   },
   register (context, obj) {
     axiosPost('/om/user/register', {
@@ -136,33 +107,31 @@ export default {
         });
       }
     });
-    // axios.post(Application.SERVICE_URL + '/om/user/register', {
-    //   userName: obj.username,
-    //   password: obj.password,
-    //   company: obj.company,
-    //   cellPhone: obj.cellPhone,
-    //   fullName: obj.fullName,
-    //   email: obj.email
-    // }).then(function (res) {
-    //   console.log(res);
-    //   if (res.data.errorCode > -1) {
-    //     Toast({
-    //       message: '注册成功，等待管理员审核!',
-    //       position: 'bottom'
-    //     });
-    //   } else {
-    //     Toast({
-    //       message: res.data.message,
-    //       position: 'bottom'
-    //     });
-    //   }
-    // }).catch(function (err) {
-    //   console.log(err);
-    //   Toast({
-    //     message: '注册失败！',
-    //     position: 'bottom'
-    //   });
-    // });
+  },
+  getPassport (context, obj) {
+    axiosGet('/om/user/getPassport', {
+      userName: obj.userName
+    }, res => {
+      Toast({
+        message: res.data.message,
+        position: 'bottom'
+      });
+    });
+  },
+  resetPwd (context, obj) {
+    axiosPost('/om/user/resetPassword', {
+      userName: obj.username,
+      password: obj.password,
+      passport: obj.passport
+    }, res => {
+      if (obj.callback) {
+        obj.callback(res.data);
+      }
+      Toast({
+        message: res.data.message,
+        position: 'bottom'
+      });
+    });
   },
   // 退出登录
   layout (context) {
