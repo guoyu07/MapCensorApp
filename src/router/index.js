@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 
 import Index from '@/components/index';
 import Login from '@/components/login';
+import ForgotPsw from '@/components/forgotPsw';
 import Register from '@/components/register';
 import IndexSuper from '@/components/index_super';
 import IndexManager from '@/components/index_manager';
@@ -30,6 +31,10 @@ const routes = [
     path: '/register',
     component: Register,
     name: 'register'
+  }, {
+    path: '/forgotPsw',
+    component: ForgotPsw,
+    name: 'forgotPsw'
   }, {  // 用于跳转，根据角色判断跳转哪个主页面
     path: '/index',
     component: Index,
